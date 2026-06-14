@@ -1,0 +1,35 @@
+{# Page header block #}
+{% macro render_header(header=none, title="", description="", background="") %}
+{% set h = header if header is mapping else {} %}
+{% set h_title = h.title | default(title) if h else title %}
+{% set h_description = h.description | default(description) if h else description %}
+{% set h_background = h.background | default(background) if h else background %}
+
+{% if h_title or h_description or h_background %}
+<header class="container-fluid wf-page-chrome text-center align-items-center p-0"
+        {% if h_background %}
+        style="min-height: 5vh;
+          background-image: url('{{ h_background }}');
+          background-attachment: fixed;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;"
+        {% else %}
+        style="min-height: 5vh;"
+        {% endif %}
+>
+    <div
+            {% if h_background %}
+            class="wf-image-overlay w-100 p-3 m-auto text-center"
+            {% else %}
+            class="wf-page-chrome-panel p-3 m-auto text-center"
+            {% endif %}
+    >
+        <h1>{{ h_title }}</h1>
+        {% if h_description %}
+        <p class="mt-3">{{ h_description }}</p>
+        {% endif %}
+    </div>
+</header>
+{% endif %}
+{% endmacro %}

@@ -1,0 +1,29 @@
+{% macro render_page_navigation(page_nav) %}
+{% if page_nav and (page_nav.previous or page_nav.next or page_nav.home) %}
+<nav class="wf-page-navigation container-fluid bg-body shadow p-3 mt-2" aria-label="Page navigation">
+    <div class="d-flex flex-column flex-md-row gap-2 justify-content-between align-items-stretch align-items-md-center">
+        <div class="wf-page-navigation-slot">
+            {% if page_nav.previous %}
+            <a class="btn btn-link text-start p-0" href="{{ page_nav.previous.href }}">
+                <span class="d-block small text-muted">Back</span>
+                <span>{{ page_nav.previous.title }}</span>
+            </a>
+            {% endif %}
+        </div>
+        <div class="wf-page-navigation-home text-center">
+            {% if page_nav.home %}
+            <a class="btn btn-link p-0" href="{{ page_nav.home.href }}">{{ page_nav.home.title }}</a>
+            {% endif %}
+        </div>
+        <div class="wf-page-navigation-slot text-md-end">
+            {% if page_nav.next %}
+            <a class="btn btn-link text-md-end p-0" href="{{ page_nav.next.href }}">
+                <span class="d-block small text-muted">Next</span>
+                <span>{{ page_nav.next.title }}</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+{% endif %}
+{% endmacro %}

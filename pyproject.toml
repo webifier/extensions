@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "webifier-extensions"
+version = "0.1.0"
+description = "First-party extensions for Webifier static sites."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "Vahid Zehtab", email = "vahid98zee@gmail.com" },
+]
+dependencies = [
+    "beautifulsoup4",
+    "markupsafe",
+    "nbconvert>=7,<8",
+    "nbformat",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+]
+
+[project.entry-points."webifier.extensions"]
+"webifier.standard" = "webifier_extensions.standard.extension:StandardExtension"
+"webifier.markdown" = "webifier_extensions.markdown.extension:MarkdownExtension"
+"webifier.notebook" = "webifier_extensions.notebook.extension:NotebookExtension"
+"webifier.search" = "webifier_extensions.search.extension:SearchExtension"
+"webifier.theme" = "webifier_extensions.theme.extension:ThemeExtension"
+"webifier.analytics.google" = "webifier_extensions.analytics.google.extension:GoogleAnalyticsExtension"
+"webifier.comments" = "webifier_extensions.comments.extension:CommentsExtension"
+"webifier.people" = "webifier_extensions.people.extension:PeopleExtension"
+"webifier.chapters" = "webifier_extensions.chapters.extension:ChaptersExtension"
+"webifier.resume" = "webifier_extensions.resume.extension:ResumeExtension"
+
+[tool.hatch.build.targets.wheel]
+packages = ["webifier_extensions"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["webifier_extensions"]

@@ -1,0 +1,84 @@
+{# Render a person card #}
+{% from "macros/link.html" import render_link %}
+
+{% macro render_person(person, style=none) %}
+{% set person_image = person.image | default("") %}
+{% set normal_class = "col-xl-3 col-lg-3 col-md-3 col-sm-4 col-12 mb-1 mb-lg-0" %}
+{% set bio_class = "col-xl-11 col-lg-11 col-md-12 col-sm-12 col-12 mb-1 mb-lg-0" %}
+{% if style %}
+    {% set normal_class = style.normal_class | default(normal_class) %}
+    {% set bio_class = style.bio_class | default(bio_class) %}
+{% endif %}
+<div
+        {% if not person.bio %}
+            class="{{ normal_class }}"
+        {% else %}
+            class="{{ bio_class }}"
+        {% endif %}
+        style="position: relative;"
+>
+    <div class="hover-shadow card shadow-sm border-0 rounded mx-5 mx-sm-0 mx-md-0 mx-lg-0 mx-xl-0 mx-xxl-0 my-2 my-sm-3 my-md-3 my-lg-3 my-xl-3 my-xxl-3">
+        <div class="row g-0">
+            {% if person.bio and person_image %}
+                <div class="col-md-3 col-lg-4 text-center">
+                    <img alt="" class="img-fluid rounded float-left"
+                         src="{{ person_image }}"
+                         style="max-height: 200px;">
+                </div>
+            {% endif %}
+            <div
+                    {% if not person.bio %}
+                        class="col-lg-12 card"
+                    {% elif not person_image %}
+                        class="col-12 card"
+                    {% else %}
+                        class="col-md-9 col-lg-8 card"
+                    {% endif %}
+                    style="border: none;"
+            >
+                <div class="card-body p-0 h-100 overflow-auto">
+                    {# image for non-bio cards #}
+                    {% if not person.bio and person_image %}
+                    <img alt="" class="w-100 card-img-top" src="{{ person_image }}">
+                    {% endif %}
+                    <div class="p-0 d-flex flex-column">
+                        {# name #}
+                        <div class="d-block w-100 mh-100 mw-100 mt-3 text-center">
+                            <h5 class="card-title">{{ person.name }}</h5>
+                        </div>
+                        {# role #}
+                        {% if person.role %}
+                        <div class="card-text small text-muted d-block w-100 mh-100 mw-100 text-center">{{ person.role }}</div>
+                        {% elif person.roles %}
+                        <div class="card-text small text-muted list-inline d-block w-100 text-center">
+                            {% for role in person.roles %}
+                            <span class="list-inline-item">{{ role }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {# bio #}
+                        {% if person.bio %}
+                        <div class="card-text d-block w-100 h-100 pt-3 pb-2 px-3">
+                            {{ person.bio }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {# contact #}
+                {% if person.contact %}
+                <div class="card-footer social p-1 text-center"
+                     style="background-color: inherit; border-top: none;">
+                    <ul class="list-inline mx-0 my-1">
+                        {% for contact in person.contact %}
+                        <li class="list-inline-item m-0">
+                            {{ render_link(contact, class="link-secondary p-0") }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}

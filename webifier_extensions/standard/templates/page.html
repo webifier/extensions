@@ -1,0 +1,53 @@
+{# Page layout — full HTML page wrapping rendered sections #}
+{% from "macros/head.html" import render_head %}
+{% from "macros/meta.html" import render_meta %}
+{% from "macros/header.html" import render_header %}
+{% from "macros/nav.html" import render_nav %}
+{% from "macros/footer.html" import render_footer %}
+{% from "macros/page_navigation.html" import render_page_navigation %}
+
+<html>
+
+{% set page_config = builder.page_config(data) %}
+
+<head>
+    <title>{{ data.title | default("Page") }}</title>
+    {{ render_head(baseurl=baseurl, config=page_config, builder=builder, data=data, ctx=ctx) }}
+    {{ render_meta(data.meta | default([])) }}
+    {% if data.style %}
+    <style>
+        {{ data.style }}
+    </style>
+    {% endif %}
+</head>
+
+<body class="bg-body-tertiary">
+<div class="app-content container-fluid">
+    {{ render_header(header=data.header | default(none)) }}
+    {{ render_nav(
+        nav=data.nav | default(none),
+        config=page_config,
+        baseurl=baseurl,
+        global_nav=builder.root_data.nav | default(none) if builder.root_data else none,
+        page_url=ctx.page_url
+    ) }}
+
+    <div id="app-body"
+         class="app-body container-fluid bg-body justify-content-center align-items-center d-flex shadow">
+        <div class="container-fluid p-0 m-0 no-gutters">
+            {% for section in data._sections %}
+                {{ section.html }}
+            {% endfor %}
+        </div>
+    </div>
+
+    {{ render_page_navigation(builder.page_navigation(page_config, data, ctx)) }}
+
+    {{ render_footer(
+        footer=data.footer | default(none),
+        global_footer=builder.root_data.footer | default(none) if builder.root_data else none
+    ) }}
+</div>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+{# Render comments section (utterances) #}
+{% macro render_comments(comments, config) %}
+{% set repo = "" %}
+{% if comments and comments.repo %}
+    {% set repo = comments.repo %}
+{% elif config and config.comments and config.comments.repo %}
+    {% set repo = config.comments.repo %}
+{% endif %}
+{% if repo %}
+<div class="p-2">
+    <script src="https://utteranc.es/client.js"
+            repo="{{ repo }}"
+            issue-term="{{ comments.issue_term | default(config.comments.issue_term | default('pathname')) if config and config.comments else comments.issue_term | default('pathname') }}"
+            label="{{ comments.issue_label | default(config.comments.issue_label | default('comments')) if config and config.comments else comments.issue_label | default('comments') }}"
+            theme="{{ comments.theme | default(config.comments.theme | default('preferred-color-scheme')) if config and config.comments else comments.theme | default('preferred-color-scheme') }}"
+            crossorigin="{{ comments.crossorigin | default(config.comments.crossorigin | default('anonymous')) if config and config.comments else comments.crossorigin | default('anonymous') }}"
+            async>
+    </script>
+</div>
+{% endif %}
+{% endmacro %}

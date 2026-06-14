@@ -1,0 +1,58 @@
+{# Render a single link element #}
+{% macro render_link(link, class="", grouped=false) %}
+{% set link_url = link.link | default("") %}
+{% set link_text = link.text | default("") %}
+{% set link_icon = link.icon | default("") %}
+{% set link_description = link.description | default("") %}
+{% set link_kind = link.kind | default("") %}
+
+{% if not grouped %}
+    <a href="{{ link_url }}" class="{{ class }}"
+       {% if link_description %}
+       data-bs-toggle="tooltip" data-bs-html="true" title="{{ link_description }}"
+       {% endif %}
+    >
+    {% if link_icon %}
+        <i class="{{ link_icon }}" aria-hidden="true"></i>
+    {% endif %}
+    {% if link.image %}
+        {% set img_src = link.image.src if link.image is mapping else link.image %}
+        {% set img_width = link.image.width | default(link.image.size | default(20)) if link.image is mapping else 20 %}
+        {% set img_height = link.image.height | default(link.image.size | default(20)) if link.image is mapping else 20 %}
+        {% set img_class = link.image.class | default("d-inline-block") if link.image is mapping else "d-inline-block" %}
+        <img src="{{ img_src }}" width="{{ img_width }}" height="{{ img_height }}" class="{{ img_class }}">
+    {% endif %}
+    {% if link_text %}
+        {{ link_text }}
+    {% endif %}
+    </a>
+{% else %}
+    <a href="{{ link_url }}" class="list-group-item list-group-item-action p-4 m-0">
+        <div class="d-flex w-100 justify-content-between py-0 my-0 p-0">
+            <h5>
+                {% if link_icon %}
+                    <i class="{{ link_icon }}" aria-hidden="true"></i>
+                {% endif %}
+                {% if link.image %}
+                    {% set img_src = link.image.src if link.image is mapping else link.image %}
+                    {% set img_width = link.image.width | default(link.image.size | default(20)) if link.image is mapping else 20 %}
+                    {% set img_height = link.image.height | default(link.image.size | default(20)) if link.image is mapping else 20 %}
+                    {% set img_class = link.image.class | default("d-inline-block") if link.image is mapping else "d-inline-block" %}
+                    <img src="{{ img_src }}" width="{{ img_width }}" height="{{ img_height }}" class="{{ img_class }}">
+                {% endif %}
+                {% if link_text %}
+                    {{ link_text }}
+                {% endif %}
+            </h5>
+            {% if link_kind %}
+                <small>{{ link_kind }}</small>
+            {% endif %}
+        </div>
+        {% if link_description %}
+            <div class="mb-1">
+                {{ link_description }}
+            </div>
+        {% endif %}
+    </a>
+{% endif %}
+{% endmacro %}

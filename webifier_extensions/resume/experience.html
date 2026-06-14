@@ -1,0 +1,246 @@
+{% macro tags_block(date, location, inline=false, centered=false) -%}
+{% if date is not none or location is not none %}
+<div class="experience-tags{% if inline %} experience-tags-inline{% endif %}{% if centered %} text-center{% endif %}">
+    {% if inline %}
+    <p class="text-muted small mb-0">
+        {% if date is not none %}{{date}}{% endif %}
+        {% if date is not none and location is not none %} • {% endif %}
+        {% if location is not none %}{{location}}{% endif %}
+    </p>
+    {% else %}
+    {% if date is not none %}
+    <p class="text-muted small mb-0">{{date}}</p>
+    {% endif %}
+    {% if location is not none %}
+    <p class="text-muted small mb-0">{{location}}</p>
+    {% endif %}
+    {% endif %}
+</div>
+{% endif %}
+{%- endmacro %}
+
+{% macro heading_vertical(institution, role, extra, description=none, centered=false) -%}
+<div class="experience-heading-vertical{% if centered %} text-center{% endif %}">
+    {% if institution is not none %}
+    <h5 class="mb-0 m-0 p-0">{{institution}}</h5>
+    {% endif %}
+    {% if role is not none %}
+    <p class="mb-0 fw-light">{{role}}</p>
+    {% endif %}
+    {% if extra is not none %}
+    <p class="mb-0 small text-muted">{{extra}}</p>
+    {% endif %}
+    {% if description is not none %}
+    <p class="experience-description small text-muted mb-0">{{description}}</p>
+    {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro heading_inline(institution, role, extra, description=none) -%}
+<span class="experience-inline-desktop">
+    {% if role is not none %}<span class="experience-inline-role fw-light">{{role}}</span>{% endif %}
+    {% if role is not none and institution is not none %}
+    <span class="experience-inline-divider"> - </span>
+    {% endif %}
+    {% if institution is not none %}<span class="experience-inline-institution h5 mb-0 m-0 p-0">{{institution}}</span>{% endif %}
+    {% if extra is not none %}
+    <span class="experience-inline-extra text-muted small">{{extra}}</span>
+    {% endif %}
+</span>
+{% if description is not none %}
+<span class="experience-description experience-inline-description text-muted small">{{description}}</span>
+{% endif %}
+<span class="experience-inline-mobile">
+    {% if institution is not none %}
+    <span class="experience-mobile-institution h5 mb-0 m-0 p-0">{{institution}}</span>
+    {% endif %}
+    {% if role is not none %}
+    <span class="experience-mobile-role fw-light">{{role}}</span>
+    {% endif %}
+    {% if extra is not none %}
+    <span class="experience-mobile-extra text-muted small">{{extra}}</span>
+    {% endif %}
+    {% if description is not none %}
+    <span class="experience-description experience-mobile-description text-muted small">{{description}}</span>
+    {% endif %}
+</span>
+{%- endmacro %}
+
+{% macro toggle_button(details_id, expanded=false) -%}
+<button class="btn experience-toggle {% if expanded %}experience-toggle-close{% else %}experience-toggle-expand{% endif %}"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#{{ details_id }}-compact, #{{ details_id }}-expanded"
+        aria-expanded="{% if expanded %}true{% else %}false{% endif %}"
+        aria-controls="{{ details_id }}-compact {{ details_id }}-expanded"
+        aria-label="{% if expanded %}Hide{% else %}Show{% endif %} details">
+    <span class="experience-toggle-icon" aria-hidden="true"></span>
+</button>
+{%- endmacro %}
+
+{% set horizontal = data.horizontal | default(false) %}
+{% set section_defaults = data.defaults | default({}) %}
+{% set section_inline = data.inline | default(section_defaults.inline | default({})) %}
+{% set compact_default = data.compact | default(section_defaults.compact | default(true)) %}
+{% set separators = data.separators | default(true) %}
+{% set meta_keys = ["background", "compact", "defaults", "freeform", "horizontal", "inline", "kind", "label", "separators", "style", "sub-label", "template"] %}
+
+<div class="container-fluid{% if horizontal %} experience-list-horizontal{% endif %}">
+    {% if horizontal %}
+    <div class="experience-track">
+    {% endif %}
+    {% for key, value in data.items() if key not in meta_keys %}
+    {% set details_id = "experience-entry-" ~ ctx.key ~ "-" ~ loop.index %}
+    {% set heading = value.heading | default({}) %}
+    {% set expanded_heading = value.expanded_heading | default(heading) %}
+    {% set heading_institution = heading.institution | default(none) %}
+    {% set heading_role = heading.role | default(none) %}
+    {% set heading_extra = heading.details | default(none) %}
+    {% set heading_date = heading.date | default(none) %}
+    {% set heading_location = heading.location | default(none) %}
+    {% set entry_description = value.description | default(none) %}
+    {% set expanded_institution = expanded_heading.institution | default(heading_institution) %}
+    {% set expanded_role = expanded_heading.role | default(heading_role) %}
+    {% set expanded_extra = expanded_heading.details | default(heading_extra) %}
+    {% set expanded_date = expanded_heading.date | default(heading_date) %}
+    {% set expanded_location = expanded_heading.location | default(heading_location) %}
+    {% set entry_compact = value.compact | default(compact_default) %}
+    {% set entry_inline = value.inline | default({}) %}
+    {% set inline_heading = entry_inline.heading | default(section_inline.heading | default(false)) %}
+    {% set inline_tags = entry_inline.tags | default(section_inline.tags | default(false)) %}
+    {% set show_details = value.content and entry_compact %}
+    {% set show_inline_content = value.content and not entry_compact %}
+
+    {% if horizontal %}
+    <div class="experience-card-wrap">
+        {% if show_details %}
+        <div class="collapse show experience-compact-view" id="{{ details_id }}-compact">
+        {% endif %}
+        <div class="experience-summary experience-summary-horizontal{% if show_details %} has-details{% endif %}">
+            <div class="experience-heading">
+                {{ heading_vertical(heading_institution, heading_role, heading_extra, none if show_inline_content else entry_description, true) }}
+            </div>
+            <div class="experience-meta">
+                {{ tags_block(heading_date, heading_location, inline_tags) }}
+                {% if show_details %}
+                <div class="experience-action-pane">
+                    {{ toggle_button(details_id) }}
+                </div>
+                {% endif %}
+            </div>
+            {% if show_inline_content %}
+            <div class="experience-inline-content text-start mt-2">
+                {{markdown(value.content)}}
+            </div>
+            {% endif %}
+        </div>
+        {% if show_details %}
+        </div>
+        <div class="collapse experience-expanded-view" id="{{ details_id }}-expanded">
+            <div class="experience-summary experience-summary-horizontal experience-summary-expanded-card">
+                <div class="experience-action-pane">
+                    {{ toggle_button(details_id, true) }}
+                </div>
+                <div class="experience-heading">
+                    {{ heading_vertical(expanded_institution, expanded_role, expanded_extra, none, true) }}
+                    {{ tags_block(expanded_date, expanded_location, true, true) }}
+                </div>
+                <div class="experience-inline-content text-start mt-2">
+                    {{markdown(value.content)}}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% if separators and not loop.last %}
+    <div class="experience-separator" aria-hidden="true"></div>
+    {% endif %}
+
+    {% elif show_details %}
+    <div class="collapse show experience-compact-view" id="{{ details_id }}-compact">
+        {% if inline_heading %}
+        <div class="experience-summary experience-summary-stack-inline has-details">
+            <div class="experience-toggle-column">
+                {{ toggle_button(details_id) }}
+            </div>
+            <div class="experience-stack-inline-main">
+                {{ heading_inline(heading_institution, heading_role, heading_extra, entry_description) }}
+            </div>
+            <div class="experience-stack-inline-side experience-meta">
+                {{ tags_block(heading_date, heading_location, inline_tags) }}
+            </div>
+        </div>
+        {% else %}
+        <div class="row my-0 align-items-center experience-summary has-details">
+            <div class="col-auto experience-toggle-column">
+                {{ toggle_button(details_id) }}
+            </div>
+            <div class="col-12 col-md-8 experience-heading-column">
+                {{ heading_vertical(heading_institution, heading_role, heading_extra, entry_description) }}
+            </div>
+            <div class="col-12 col-md text-md-end text-center mt-2 mt-md-0 experience-meta">
+                {{ tags_block(heading_date, heading_location, inline_tags) }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="collapse experience-expanded-view" id="{{ details_id }}-expanded">
+        <div class="row my-0 experience-summary experience-summary-inline experience-summary-expanded">
+            <div class="col-auto experience-toggle-column">
+                {{ toggle_button(details_id, true) }}
+            </div>
+            <div class="col-12 col-md-4 experience-heading-inline">
+                {{ heading_vertical(expanded_institution, expanded_role, expanded_extra, none, true) }}
+                {{ tags_block(expanded_date, expanded_location, true, true) }}
+            </div>
+            <div class="col-12 col-md-7 experience-inline-content">
+                {{markdown(value.content)}}
+            </div>
+        </div>
+    </div>
+
+    {% elif show_inline_content %}
+    <div class="row my-0 experience-summary experience-summary-inline">
+        <div class="col-12 col-md-4 experience-heading-inline">
+            {{ heading_vertical(expanded_institution, expanded_role, expanded_extra, none, true) }}
+            {{ tags_block(expanded_date, expanded_location, true, true) }}
+        </div>
+        <div class="col-12 col-md-8 experience-inline-content">
+            {{markdown(value.content)}}
+        </div>
+    </div>
+
+    {% elif inline_heading %}
+    <div class="experience-summary experience-summary-stack-inline">
+        <div class="experience-toggle-column experience-toggle-placeholder"></div>
+        <div class="experience-stack-inline-main">
+            {{ heading_inline(heading_institution, heading_role, heading_extra, entry_description) }}
+        </div>
+        <div class="experience-stack-inline-side experience-meta">
+            {{ tags_block(heading_date, heading_location, inline_tags) }}
+        </div>
+    </div>
+
+    {% else %}
+    <div class="row my-0 align-items-center experience-summary">
+        <div class="col-12 col-md-8 experience-heading-column">
+            {{ heading_vertical(heading_institution, heading_role, heading_extra, entry_description) }}
+        </div>
+        <div class="col-12 col-md-4 text-md-end text-center mt-2 mt-md-0 experience-meta">
+            {{ tags_block(heading_date, heading_location, inline_tags) }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if separators and not horizontal and not loop.last %}
+    {% if not value.no_line %}
+    <hr class="row mb-3 mt-3 mx-5 p-0">
+    {% else %}
+    <div class="row mb-3 mt-3 mx-5 p-0"></div>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+    {% if horizontal %}
+    </div>
+    {% endif %}
+</div>

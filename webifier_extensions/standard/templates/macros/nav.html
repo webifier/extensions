@@ -1,0 +1,175 @@
+{# Navigation bar #}
+{% from "macros/link.html" import render_link %}
+
+{% macro render_nav(nav=none, config=none, baseurl="", colab="", global_nav=none, page_url="") %}
+{% if nav is not none and nav != false %}
+{% set has_fixed = (nav is mapping and nav.fixed) or (global_nav is mapping and global_nav.fixed) %}
+{% set has_brand = (global_nav is mapping and global_nav.brand) %}
+
+{% if has_fixed or has_brand %}
+    {% set links = nav.content | default(global_nav.content | default([])) if nav is mapping else global_nav.content | default([]) %}
+{% else %}
+    {% set links = nav.content | default(global_nav.content | default(global_nav | default([]))) if nav is mapping else global_nav.content | default(global_nav | default([])) %}
+{% endif %}
+
+{% set has_search = config and config.search and (config.search.links or config.search.content) %}
+{% set has_links = links | length > 0 %}
+
+<nav class="px-2 navbar navbar-expand-lg bg-body-tertiary m-0 p-2 sticky-top shadow">
+    {# Brand #}
+    {% if has_brand %}
+    {{ render_link(global_nav.brand, class="btn navbar-brand") }}
+    {% endif %}
+
+    <div
+            {% if has_links or has_search %}
+            class="collapse navbar-collapse p-0 m-0"
+            id="navbarSupportedContent"
+            {% else %}
+            class="p-0 m-0 navbar-collapse"
+            {% endif %}
+    >
+        <ul class="navbar-nav me-auto my-1 p-0">
+            {% for link in links %}
+            <li class="nav-item">
+                {% set cur_url = link.link | default("") | replace("index.html", "") %}
+                {% if page_url == link.link or page_url == cur_url %}
+                {{ render_link(link, class="btn nav-link active") }}
+                {% else %}
+                {{ render_link(link, class="btn nav-link") }}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% if has_search %}
+        <div class="ms-auto d-flex my-0 p-0 py-0">
+            <div class="input-group input-group-sm no-border p-0">
+                <input type="text" class="form-control no-border py-0 form-control-sm" placeholder="Search"
+                       aria-label="search"
+                       aria-describedby="basic-addon1" name="q" id="search-input">
+                <button class="input-group-text btn disabled"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="d-flex my-1 ms-auto">
+        {% if has_links or has_search %}
+        <button class="navbar-toggler btn" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        {% endif %}
+
+        {% set fixed_links = [] %}
+        {% if nav is mapping and nav.fixed %}
+            {% set fixed_links = nav.fixed %}
+        {% elif global_nav is mapping and global_nav.fixed %}
+            {% set fixed_links = global_nav.fixed %}
+        {% endif %}
+        {% for link in fixed_links %}
+        {{ render_link(link, class="btn nav-item mt-1") }}
+        {% endfor %}
+
+        {% set theme = config.theme | default({}) if config else {} %}
+        {% set theme_switcher = theme.switcher | default(true) %}
+        {% if theme_switcher %}
+        <button
+                class="btn nav-item mt-1 webifier-theme-toggle"
+                type="button"
+                id="webifier-theme-toggle"
+                title="Switch color theme"
+                aria-label="Switch color theme"
+                data-theme-default="{{ theme.default | default('system') }}"
+                data-theme-modes="system,light,dark{% for item in theme.themes | default([]) %}{% if item.name %},{{ item.name }}{% endif %}{% endfor %}"
+        >
+            <svg class="webifier-theme-symbol webifier-theme-symbol-system" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="13" rx="2"></rect>
+                <path d="M8 21h8"></path>
+                <path d="M12 17v4"></path>
+            </svg>
+            <svg class="webifier-theme-symbol webifier-theme-symbol-light" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="M4.93 4.93l1.41 1.41"></path>
+                <path d="M17.66 17.66l1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="M6.34 17.66l-1.41 1.41"></path>
+                <path d="M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+            <svg class="webifier-theme-symbol webifier-theme-symbol-dark" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path>
+            </svg>
+            <span class="visually-hidden webifier-theme-label">Theme</span>
+        </button>
+        {% endif %}
+
+        {% if colab %}
+        <a class="nav-link my-0" href="{{ colab }}">
+            <img src="{{ baseurl }}/assets/images/colab-badge.svg" height="15px" alt="Open in colab">
+        </a>
+        {% endif %}
+    </div>
+</nav>
+
+{# Search results container #}
+{% if has_search %}
+{{ render_search(baseurl) }}
+{% endif %}
+
+{% endif %}
+{% endmacro %}
+
+{% macro render_search(baseurl) %}
+<div
+        id="search-results-div"
+        class="w-100 bg-body-tertiary p-4 overflow-auto"
+        style="position: relative; top: 0%; left: 0%; display: none; max-height: 40vh;"
+>
+    <div class="container">
+        <h5>Search Results:</h5>
+        <div class="list-group" id="search-results"></div>
+    </div>
+</div>
+<script src="https://unpkg.com/simple-jekyll-search@latest/dest/simple-jekyll-search.min.js"></script>
+<script>
+const searchInput = document.getElementById('search-input');
+const resultsContainer = document.getElementById('search-results');
+const resultsContainerDiv = document.getElementById('search-results-div');
+const searchTemplateDes = `
+    <a href="{url}" class="list-group-item flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{title}</h5>
+            <small>{category}</small>
+        </div>
+        <p class="mb-1">{description_raw}</p>
+    </a>
+`;
+
+SimpleJekyllSearch({
+    searchInput: searchInput,
+    resultsContainer: resultsContainer,
+    searchResultTemplate: searchTemplateDes,
+    noResultsText: '<p>No results found!</p>',
+    limit: 999,
+    templateMiddleware: function(prop, value, template) {
+        if( prop === "description_raw" && value === ""){
+            return "";
+        }
+        if( prop === "category" && value === ""){
+            return "";
+        }
+    },
+    json: '{{ baseurl }}/search.json'
+});
+searchInput.addEventListener('input', function () {
+    if( this.value ){
+        resultsContainerDiv.style.display = "block";
+    } else {
+        resultsContainerDiv.style.display = "none";
+    }
+});
+</script>
+{% endmacro %}

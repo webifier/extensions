@@ -1,0 +1,76 @@
+{# Section layout — label + rendered children #}
+{% set label_text = data._label_text | default("") %}
+{% set label_disabled = data._label_disabled | default(false) %}
+{% set label_position = data._label_position | default("left") %}
+{% set has_background = data.background is defined and data.background %}
+
+{% if label_position in ["top", "bottom"] %}
+    {% set pad_direction = "x" %}
+    {% set section_shadow = "hover-shadow" %}
+    {% set section_content_shadow = "" %}
+{% else %}
+    {% set pad_direction = "e" %}
+    {% set section_shadow = "" %}
+    {% set section_content_shadow = "hover-shadow" %}
+{% endif %}
+
+{# Check if content is list-like (for spacing) #}
+{% set children = data._children | default([]) %}
+{% set spacing = "px-4 p-4" %}
+
+<div id="{{ ctx.key }}"
+    {% if has_background %}
+        class="row align-items-start py-3 p{{ pad_direction }}-xs-0 p{{ pad_direction }}-sm-0
+        p{{ pad_direction }}-md-1 p{{ pad_direction }}-lg-2 p{{ pad_direction }}-xlg-2 p{{ pad_direction }}-xxlg-2"
+        style="min-height: 5vh;
+          background-image: url('{{ data.background }}');
+          background-attachment: fixed;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;"
+    {% else %}
+        class="{{ section_shadow }} row align-items-start my-2 p{{ pad_direction }}-xs-0
+            p{{ pad_direction }}-sm-0 p{{ pad_direction }}-md-1
+         p{{ pad_direction }}-lg-2 p{{ pad_direction }}-xlg-2 p{{ pad_direction }}-xxlg-2"
+        style="min-height: 5vh;"
+    {% endif %}
+>
+    {# Label — left or top position #}
+    {% if not label_disabled %}
+        {% if label_position == "left" %}
+            <div class="wf-section-label mt-4 mb shadow-lg col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2
+                col-xxl-2 p-3 d-flex justify-content-center">
+                <strong>{{ label_text }}</strong>
+            </div>
+        {% elif label_position == "top" %}
+            <div class="wf-section-label text-center col-12 py-3">
+                <span class="shadow-lg p-3 px-5 w-100"><strong>{{ label_text }}</strong></span>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <div
+        {% if not label_disabled and label_position not in ["top", "bottom"] %}
+            class="rounded {{ section_content_shadow }} bg-body shadow col-12 col-sm-12
+                col-md-10 col-lg-10 col-xl-10 col-xxl-10 {{ spacing }} justify-content-center"
+        {% else %}
+            class="rounded {{ section_content_shadow }} bg-body shadow col-12 {{ spacing }}
+            justify-content-center"
+        {% endif %}
+    >
+        {% if data._inner_html is defined and data._inner_html %}
+            {{ data._inner_html }}
+        {% else %}
+            {% for child in children %}
+                {{ child.html }}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    {# Label — bottom position #}
+    {% if not label_disabled and label_position == "bottom" %}
+        <div class="wf-section-label text-center col-12 py-3">
+            <span class="shadow-lg p-3 px-5 w-100"><strong>{{ label_text }}</strong></span>
+        </div>
+    {% endif %}
+</div>

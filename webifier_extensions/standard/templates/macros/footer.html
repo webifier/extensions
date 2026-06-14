@@ -1,0 +1,33 @@
+{# Page footer block #}
+{% macro render_footer(footer=none, background="", global_footer=none) %}
+{% set f = footer if footer is mapping else {} %}
+{% set f_background = f.background | default(background) if f else background %}
+{% set f_text = f.text | default("") if f else footer if footer is string else "" %}
+{% if not f_text and global_footer %}
+    {% set f_text = global_footer.text | default("") if global_footer is mapping else "" %}
+{% endif %}
+
+<footer class="container-fluid wf-page-chrome shadow text-center align-items-center p-0 hidden-print"
+        {% if f_background %}
+        style="min-height: 2vh;
+          background-image: url('{{ f_background }}');
+          background-attachment: fixed;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;"
+        {% else %}
+        style="min-height: 2vh;"
+        {% endif %}
+>
+    <div
+            {% if f_background %}
+            class="wf-header-panel w-100 p-3 m-auto text-center"
+            {% else %}
+            class="wf-page-chrome-panel p-3 m-auto text-center"
+            {% endif %}
+    >
+        {{ f_text }}
+        © Powered by <a class="link-primary" href="https://github.com/webifier/build">Webifier</a>
+    </div>
+</footer>
+{% endmacro %}

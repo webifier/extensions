@@ -1,0 +1,18 @@
+{# Render a list of links #}
+{% from "macros/link.html" import render_link %}
+
+{% macro render_links(links, inline=false, kind_block=false) %}
+{% if not inline or kind_block %}
+<div class="list-group">
+{% else %}
+<div class="list-inline">
+{% endif %}
+    {% for link in links %}
+    {% if inline and not kind_block %}
+    {{ render_link(link, class="list-inline-item") }}
+    {% else %}
+    {{ render_link(link, grouped=true) }}
+    {% endif %}
+    {% endfor %}
+</div>
+{% endmacro %}

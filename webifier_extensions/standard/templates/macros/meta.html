@@ -1,0 +1,12 @@
+{# Meta tags #}
+{% macro render_meta(meta) %}
+{% if meta is iterable and meta is not string and meta is not mapping %}
+    {% for tag in meta %}
+        <meta
+        {% for key, val in tag.items() %}
+            {{ key }}="{{ val }}"
+        {% endfor %}
+        >
+    {% endfor %}
+{% endif %}
+{% endmacro %}

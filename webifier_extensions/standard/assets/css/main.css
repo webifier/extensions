@@ -1,0 +1,115 @@
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-size: 1rem;
+    zoom: 125%;
+}
+
+* > p:last-child {
+    margin-bottom: 0 !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+.app-content a:not(.btn):not(.nav-link):not(.navbar-brand):not(.list-group-item):not(.dropdown-item):not(.webifier-theme-toggle) {
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.18em;
+    transition:
+        color 0.12s ease,
+        text-decoration-color 0.12s ease;
+}
+
+.app-content a:not(.btn):not(.nav-link):not(.navbar-brand):not(.list-group-item):not(.dropdown-item):not(.webifier-theme-toggle):hover,
+.app-content a:not(.btn):not(.nav-link):not(.navbar-brand):not(.list-group-item):not(.dropdown-item):not(.webifier-theme-toggle):focus {
+    text-decoration-color: currentColor;
+}
+
+.hover-shadow:hover {
+    filter: drop-shadow(0 0.1rem 0.3rem rgba(0,0,0, 0.5));
+}
+.hover-shadow {
+    transition: all 0.1s ease;
+}
+
+.wf-section-label {
+    align-items: center;
+    overflow-wrap: anywhere;
+    line-height: 1.25;
+    text-align: center;
+}
+
+.wf-page-chrome,
+.wf-page-chrome-panel,
+.wf-surface-chrome,
+.wf-surface-chrome-panel {
+    background-color: var(--wf-surface, var(--bs-body-bg, #fff));
+    color: var(--wf-text, var(--bs-body-color, #212529));
+}
+
+.wf-page-navigation-slot {
+    min-width: 0;
+    flex: 1 1 0;
+}
+
+.wf-page-navigation-home {
+    flex: 0 0 auto;
+}
+
+.wf-page-navigation a {
+    text-decoration: none;
+}
+
+footer {
+    position: static;
+    width: 100%;
+    bottom: 0;
+}
+
+.bg-black {
+    background-color: black;
+}
+
+.app-content {
+    padding: 3vh 0;
+    max-width: 85%;
+}
+
+.accordion-button:not(.collapsed) {
+    color: #0c63e4;
+    background-color: #e7f1ff;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
+}
+
+.accordion-button:hover {
+    z-index: 2;
+}
+
+.accordion-button:focus {
+    z-index: 3;
+    outline: 0;
+}
+
+.accordion-button.collapsed {
+    background-color: var(--wf-surface, white);
+}
+
+@media only screen and (max-width: 1400px) {
+    .app-content {
+        max-width: 95%;
+        padding: 1vh 0;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .app-content {
+        max-width: 100%;
+        padding: 0;
+
+    }
+}

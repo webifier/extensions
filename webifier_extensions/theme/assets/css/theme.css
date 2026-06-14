@@ -1,0 +1,220 @@
+:root {
+    color-scheme: light;
+    --wf-bg: var(--bs-light);
+    --wf-surface: var(--bs-body-bg);
+    --wf-text: var(--bs-body-color);
+    --wf-muted: var(--bs-secondary-color);
+    --wf-border: var(--bs-border-color);
+    --wf-shadow: rgba(0, 0, 0, 0.15);
+    --wf-header-overlay: rgba(255, 255, 255, 0.75);
+    --wf-image-overlay: rgba(0, 0, 0, 0.5);
+}
+
+:root[data-bs-theme="dark"] {
+    color-scheme: dark;
+    --wf-bg: #111418;
+    --wf-surface: #191d23;
+    --wf-text: #f1f3f5;
+    --wf-muted: #adb5bd;
+    --wf-border: #343a40;
+    --wf-shadow: rgba(0, 0, 0, 0.45);
+    --wf-header-overlay: rgba(17, 20, 24, 0.78);
+    --wf-image-overlay: rgba(0, 0, 0, 0.62);
+}
+
+body,
+.bg-light {
+    background-color: var(--wf-bg) !important;
+    color: var(--wf-text);
+}
+
+.bg-white,
+.app-body,
+.navbar,
+.card,
+.list-group-item,
+.accordion-item,
+.accordion-button,
+.dropdown-menu {
+    background-color: var(--wf-surface) !important;
+    color: var(--wf-text) !important;
+    border-color: var(--wf-border) !important;
+}
+
+.text-dark,
+.navbar-light .navbar-brand,
+.navbar-light .navbar-nav .nav-link {
+    color: var(--wf-text) !important;
+}
+
+.text-muted {
+    color: var(--wf-muted) !important;
+}
+
+:root[data-bs-theme="dark"] .btn-light {
+    --bs-btn-bg: var(--wf-bg);
+    --bs-btn-border-color: var(--wf-border);
+    --bs-btn-color: var(--wf-text);
+    --bs-btn-disabled-bg: var(--wf-bg);
+    --bs-btn-disabled-border-color: var(--wf-border);
+    --bs-btn-disabled-color: var(--wf-muted);
+    --bs-btn-hover-bg: #212529;
+    --bs-btn-hover-border-color: var(--wf-muted);
+    --bs-btn-hover-color: var(--wf-text);
+    --bs-btn-active-bg: #2b3035;
+    --bs-btn-active-border-color: var(--wf-muted);
+    --bs-btn-active-color: var(--wf-text);
+}
+
+.shadow,
+.shadow-sm,
+.shadow-lg {
+    box-shadow: 0 0.5rem 1rem var(--wf-shadow) !important;
+}
+
+.webifier-theme-toggle {
+    color: var(--wf-text) !important;
+    min-width: 2.25rem;
+}
+
+.webifier-theme-toggle:hover,
+.webifier-theme-toggle:focus {
+    color: var(--wf-text) !important;
+    opacity: 0.78;
+}
+
+.webifier-theme-symbol {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1rem;
+    line-height: 1;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+:root[data-wf-theme="system"] .webifier-theme-symbol-system,
+:root[data-wf-theme="light"] .webifier-theme-symbol-light,
+:root[data-wf-theme="dark"] .webifier-theme-symbol-dark {
+    display: inline-flex;
+}
+
+:root[data-wf-theme="light"] .webifier-theme-symbol-light {
+    stroke: #f59f00;
+}
+
+:root[data-wf-theme="system"] .webifier-theme-symbol-system,
+:root[data-wf-theme="dark"] .webifier-theme-symbol-dark {
+    stroke: #0d6efd;
+}
+
+.wf-header-panel {
+    background-color: var(--wf-header-overlay) !important;
+}
+
+.wf-page-chrome,
+.wf-page-chrome-panel {
+    background-color: var(--wf-surface) !important;
+    color: var(--wf-text) !important;
+}
+
+.wf-surface-chrome,
+.wf-surface-chrome-panel {
+    background-color: var(--wf-surface) !important;
+    color: var(--wf-text) !important;
+}
+
+.wf-image-overlay {
+    background-color: var(--wf-image-overlay) !important;
+}
+
+pre,
+code {
+    color: var(--wf-text);
+}
+
+pre {
+    background-color: var(--bs-tertiary-bg);
+}
+
+.wf-section-label {
+    background-color: #212529 !important;
+    color: #adb5bd !important;
+}
+
+.wf-section-label span {
+    background-color: #212529 !important;
+    color: #adb5bd !important;
+}
+
+:root[data-bs-theme="dark"] .codehilite {
+    background: #0d1117;
+    color: #e6edf3;
+}
+
+:root[data-bs-theme="dark"] .codehilite pre {
+    background: #0d1117;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+}
+
+:root[data-bs-theme="dark"] .codehilite .hll { background-color: #2d333b; }
+:root[data-bs-theme="dark"] .codehilite .c,
+:root[data-bs-theme="dark"] .codehilite .ch,
+:root[data-bs-theme="dark"] .codehilite .cm,
+:root[data-bs-theme="dark"] .codehilite .cpf,
+:root[data-bs-theme="dark"] .codehilite .c1,
+:root[data-bs-theme="dark"] .codehilite .cs { color: #8b949e; }
+:root[data-bs-theme="dark"] .codehilite .k,
+:root[data-bs-theme="dark"] .codehilite .kc,
+:root[data-bs-theme="dark"] .codehilite .kd,
+:root[data-bs-theme="dark"] .codehilite .kn,
+:root[data-bs-theme="dark"] .codehilite .kp,
+:root[data-bs-theme="dark"] .codehilite .kr,
+:root[data-bs-theme="dark"] .codehilite .nt { color: #ff7b72; }
+:root[data-bs-theme="dark"] .codehilite .s,
+:root[data-bs-theme="dark"] .codehilite .s1,
+:root[data-bs-theme="dark"] .codehilite .s2,
+:root[data-bs-theme="dark"] .codehilite .sb,
+:root[data-bs-theme="dark"] .codehilite .sc,
+:root[data-bs-theme="dark"] .codehilite .sd,
+:root[data-bs-theme="dark"] .codehilite .se,
+:root[data-bs-theme="dark"] .codehilite .sh,
+:root[data-bs-theme="dark"] .codehilite .si,
+:root[data-bs-theme="dark"] .codehilite .sr,
+:root[data-bs-theme="dark"] .codehilite .ss,
+:root[data-bs-theme="dark"] .codehilite .dl,
+:root[data-bs-theme="dark"] .codehilite .l,
+:root[data-bs-theme="dark"] .codehilite .ld { color: #a5d6ff; }
+:root[data-bs-theme="dark"] .codehilite .m,
+:root[data-bs-theme="dark"] .codehilite .mb,
+:root[data-bs-theme="dark"] .codehilite .mf,
+:root[data-bs-theme="dark"] .codehilite .mh,
+:root[data-bs-theme="dark"] .codehilite .mi,
+:root[data-bs-theme="dark"] .codehilite .mo,
+:root[data-bs-theme="dark"] .codehilite .il { color: #79c0ff; }
+:root[data-bs-theme="dark"] .codehilite .na,
+:root[data-bs-theme="dark"] .codehilite .nb,
+:root[data-bs-theme="dark"] .codehilite .nc,
+:root[data-bs-theme="dark"] .codehilite .nf,
+:root[data-bs-theme="dark"] .codehilite .nn,
+:root[data-bs-theme="dark"] .codehilite .nv,
+:root[data-bs-theme="dark"] .codehilite .bp,
+:root[data-bs-theme="dark"] .codehilite .fm,
+:root[data-bs-theme="dark"] .codehilite .vc,
+:root[data-bs-theme="dark"] .codehilite .vg,
+:root[data-bs-theme="dark"] .codehilite .vi,
+:root[data-bs-theme="dark"] .codehilite .vm { color: #d2a8ff; }
+:root[data-bs-theme="dark"] .codehilite .o,
+:root[data-bs-theme="dark"] .codehilite .ow,
+:root[data-bs-theme="dark"] .codehilite .p,
+:root[data-bs-theme="dark"] .codehilite .w { color: #e6edf3; }
+:root[data-bs-theme="dark"] .codehilite .err {
+    color: #ffdcd7;
+    border-color: #f85149;
+}
