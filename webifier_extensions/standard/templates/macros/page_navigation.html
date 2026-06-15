@@ -4,9 +4,8 @@
     <div class="wf-page-navigation-inner">
         <div class="wf-page-navigation-slot wf-page-navigation-previous">
             {% if page_nav.previous %}
-            <a class="btn btn-link p-0" href="{{ page_nav.previous.href }}">
-                <span class="d-block small text-muted">Back</span>
-                <span>{{ page_nav.previous.title }}</span>
+            <a class="btn btn-link p-0 wf-page-navigation-back-icon" href="{{ page_nav.previous.href }}" aria-label="Back to {{ page_nav.previous.title }}" title="Back to {{ page_nav.previous.title }}">
+                <span aria-hidden="true">&lsaquo;</span>
             </a>
             {% endif %}
         </div>
