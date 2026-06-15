@@ -48,8 +48,11 @@ a {
 }
 
 .navbar-brand img {
+    background: var(--wf-surface, var(--bs-body-bg, #fff));
     border-radius: 50%;
+    box-shadow: 0 0 0 1px var(--wf-border, rgba(0, 0, 0, 0.14));
     object-fit: cover;
+    padding: 0.12rem;
 }
 
 .wf-nav-back {
