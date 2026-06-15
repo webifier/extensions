@@ -1,10 +1,10 @@
 html {
-    font-size: 100%;
+    font-size: 62.5%;
 }
 
 body {
-    font-size: 0.95rem;
-    line-height: 1.55;
+    font-size: 1.25rem;
+    line-height: 1.5;
 }
 
 * > p:last-child {
@@ -38,7 +38,7 @@ a {
 }
 
 .wf-navbar {
-    font-size: 0.92rem;
+    font-size: 1.2rem;
 }
 
 .navbar-brand {
@@ -76,7 +76,7 @@ a {
 
 .wf-section-label span,
 .wf-section-label {
-    font-size: 0.95rem;
+    font-size: 1.25rem;
 }
 
 .wf-page-chrome,
@@ -143,31 +143,31 @@ footer {
 }
 
 .app-content h1 {
-    font-size: clamp(1.65rem, 1.35rem + 1vw, 2.15rem);
+    font-size: clamp(2.4rem, 2rem + 0.6vw, 3rem);
 }
 
 .app-content h2 {
-    font-size: clamp(1.35rem, 1.2rem + 0.55vw, 1.7rem);
+    font-size: clamp(2rem, 1.7rem + 0.45vw, 2.5rem);
 }
 
 .app-content h3 {
-    font-size: clamp(1.18rem, 1.08rem + 0.35vw, 1.38rem);
+    font-size: clamp(1.6rem, 1.45rem + 0.25vw, 2rem);
 }
 
 .app-content h4 {
-    font-size: 1.08rem;
+    font-size: 1.4rem;
 }
 
 .app-content h5,
 .app-content h6 {
-    font-size: 1rem;
+    font-size: 1.25rem;
 }
 
 .app-content p,
 .app-content li,
 .app-content td,
 .app-content th {
-    font-size: 0.95rem;
+    font-size: 1.25rem;
 }
 
 .wf-page-chrome h1 {
@@ -222,10 +222,10 @@ footer {
     }
 
     .wf-page-navigation a {
-        font-size: 0.92rem;
+        font-size: 1.2rem;
     }
 
     .wf-page-navigation .small {
-        font-size: 0.78rem;
+        font-size: 1.05rem;
     }
 }

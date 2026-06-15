@@ -2,17 +2,17 @@
 {% if date is not none or location is not none %}
 <div class="experience-tags{% if inline %} experience-tags-inline{% endif %}{% if centered %} text-center{% endif %}">
     {% if inline %}
-    <p class="text-muted small mb-0">
+    <p class="text-muted mb-0">
         {% if date is not none %}{{date}}{% endif %}
         {% if date is not none and location is not none %} • {% endif %}
         {% if location is not none %}{{location}}{% endif %}
     </p>
     {% else %}
     {% if date is not none %}
-    <p class="text-muted small mb-0">{{date}}</p>
+    <p class="text-muted mb-0">{{date}}</p>
     {% endif %}
     {% if location is not none %}
-    <p class="text-muted small mb-0">{{location}}</p>
+    <p class="text-muted mb-0">{{location}}</p>
     {% endif %}
     {% endif %}
 </div>
@@ -22,46 +22,46 @@
 {% macro heading_vertical(institution, role, extra, description=none, centered=false) -%}
 <div class="experience-heading-vertical{% if centered %} text-center{% endif %}">
     {% if institution is not none %}
-    <h5 class="mb-0 m-0 p-0">{{institution}}</h5>
+    <div class="experience-heading-institution">{{institution}}</div>
     {% endif %}
     {% if role is not none %}
-    <p class="mb-0 fw-light">{{role}}</p>
+    <p class="experience-heading-role">{{role}}</p>
     {% endif %}
     {% if extra is not none %}
-    <p class="mb-0 small text-muted">{{extra}}</p>
+    <p class="experience-heading-extra text-muted">{{extra}}</p>
     {% endif %}
     {% if description is not none %}
-    <p class="experience-description small text-muted mb-0">{{description}}</p>
+    <p class="experience-description text-muted">{{description}}</p>
     {% endif %}
 </div>
 {%- endmacro %}
 
 {% macro heading_inline(institution, role, extra, description=none) -%}
 <span class="experience-inline-desktop">
-    {% if role is not none %}<span class="experience-inline-role fw-light">{{role}}</span>{% endif %}
+    {% if role is not none %}<span class="experience-inline-role">{{role}}</span>{% endif %}
     {% if role is not none and institution is not none %}
     <span class="experience-inline-divider"> - </span>
     {% endif %}
-    {% if institution is not none %}<span class="experience-inline-institution h5 mb-0 m-0 p-0">{{institution}}</span>{% endif %}
+    {% if institution is not none %}<span class="experience-inline-institution">{{institution}}</span>{% endif %}
     {% if extra is not none %}
-    <span class="experience-inline-extra text-muted small">{{extra}}</span>
+    <span class="experience-inline-extra text-muted">{{extra}}</span>
     {% endif %}
 </span>
 {% if description is not none %}
-<span class="experience-description experience-inline-description text-muted small">{{description}}</span>
+<span class="experience-description experience-inline-description text-muted">{{description}}</span>
 {% endif %}
 <span class="experience-inline-mobile">
     {% if institution is not none %}
-    <span class="experience-mobile-institution h5 mb-0 m-0 p-0">{{institution}}</span>
+    <span class="experience-mobile-institution">{{institution}}</span>
     {% endif %}
     {% if role is not none %}
-    <span class="experience-mobile-role fw-light">{{role}}</span>
+    <span class="experience-mobile-role">{{role}}</span>
     {% endif %}
     {% if extra is not none %}
-    <span class="experience-mobile-extra text-muted small">{{extra}}</span>
+    <span class="experience-mobile-extra text-muted">{{extra}}</span>
     {% endif %}
     {% if description is not none %}
-    <span class="experience-description experience-mobile-description text-muted small">{{description}}</span>
+    <span class="experience-description experience-mobile-description text-muted">{{description}}</span>
     {% endif %}
 </span>
 {%- endmacro %}

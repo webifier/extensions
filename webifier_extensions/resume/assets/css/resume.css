@@ -98,6 +98,7 @@
 .experience-description {
     display: block;
     margin-top: 0.1rem;
+    font-size: 1.05rem;
     line-height: 1.25;
 }
 
@@ -124,6 +125,39 @@
     text-align: center;
 }
 
+.experience-heading-institution,
+.experience-inline-institution,
+.experience-mobile-institution {
+    margin: 0;
+    padding: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.22;
+}
+
+.experience-heading-role,
+.experience-inline-role,
+.experience-mobile-role {
+    margin: 0;
+    padding: 0;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.25;
+}
+
+.experience-heading-extra,
+.experience-inline-extra,
+.experience-mobile-extra {
+    margin: 0;
+    padding: 0;
+    font-size: 1.05rem;
+    line-height: 1.25;
+}
+
+.experience-inline-extra {
+    margin-left: 0.4rem;
+}
+
 .experience-separator {
     align-self: center;
     width: 1px;
@@ -145,8 +179,14 @@
     min-width: 0;
     color: var(--wf-experience-meta-color, var(--wf-muted, var(--bs-secondary-color)));
     font-family: var(--bs-font-monospace);
+    font-size: 1.05rem;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.01em;
+}
+
+.experience-tags p {
+    font-size: inherit;
+    line-height: 1.25;
 }
 
 .experience-tags .text-muted {
@@ -280,6 +320,15 @@
 
 .experience-summary-horizontal .experience-action-pane {
     justify-content: center;
+}
+
+.resume-publication-title {
+    margin: 0;
+    padding: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: left;
 }
 
 @keyframes experience-enter-from-right {
