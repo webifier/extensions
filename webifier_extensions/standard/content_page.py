@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Any, ClassVar
 
 from webifier.core.base import NodeContext, RendererModule
@@ -43,6 +44,10 @@ class ContentPageRenderer(RendererModule):
         after_content = []
         metadata = processed.get("metadata", {})
         if isinstance(metadata, dict):
+            metadata_ctx = ctx
+            source_path = processed.get("source_path")
+            if isinstance(source_path, str) and source_path:
+                metadata_ctx = ctx.child("metadata", assets_src_dir=os.path.dirname(source_path))
             author_items = []
             author_section = None
             for key in ("authors", "reviewers"):
@@ -62,7 +67,7 @@ class ContentPageRenderer(RendererModule):
                 after_content.append(
                     {
                         "key": "authors",
-                        "html": builder.process_node(author_section, ctx.child("authors")),
+                        "html": builder.process_node(author_section, metadata_ctx.child("authors")),
                         "data": author_section,
                     }
                 )
@@ -71,7 +76,7 @@ class ContentPageRenderer(RendererModule):
                     continue
                 section = {
                     "key": key,
-                    "html": builder.process_node(value, ctx.child(key)),
+                    "html": builder.process_node(value, metadata_ctx.child(key)),
                     "data": value,
                 }
                 if key == "comments":
