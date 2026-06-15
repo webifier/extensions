@@ -50,6 +50,7 @@ class ContentPageRenderer(RendererModule):
                 processed,
                 cleanup=bool(content_config.get("cleanup")),
                 toc=bool(content_config.get("toc")),
+                asset_base=builder.base_url.rstrip("/"),
             )
         before_content = []
         after_content = []
@@ -113,7 +114,7 @@ class ContentPageRenderer(RendererModule):
         processed["_after_content_sections"] = after_content
         return processed
 
-    def normalize_content(self, html: str, data: dict[str, Any], cleanup: bool, toc: bool) -> str:
+    def normalize_content(self, html: str, data: dict[str, Any], cleanup: bool, toc: bool, asset_base: str = "") -> str:
         soup = BeautifulSoup(html, "html.parser")
         root = soup.find("body") or soup
         content_root = root.find("main") or root
@@ -385,6 +386,7 @@ class ContentPageRenderer(RendererModule):
                 heading["id"] = slug
                 headings.append({"level": int(heading.name[1]), "title": text, "href": f"#{slug}"})
 
+        toc_nav = None
         if toc and len(headings) >= 3:
             nav = soup.new_tag("nav")
             nav["class"] = "wf-content-toc is-collapsed"
@@ -414,6 +416,25 @@ class ContentPageRenderer(RendererModule):
                 items.append(item)
             nav.append(items)
             root.insert(0, nav)
+            toc_nav = nav
+
+        if data.get("colab"):
+            actions = soup.new_tag("div")
+            actions["class"] = "wf-content-actions"
+            link = soup.new_tag("a", href=str(data["colab"]))
+            link["class"] = "wf-content-colab-link"
+            link["target"] = "_blank"
+            link["rel"] = "noopener noreferrer"
+            link["aria-label"] = "Open in Colab"
+            link["title"] = "Open in Colab"
+            image = soup.new_tag("img", src=f"{asset_base}/assets/images/colab-badge.svg")
+            image["alt"] = "Open in Colab"
+            link.append(image)
+            actions.append(link)
+            if toc_nav:
+                toc_nav.insert_after(actions)
+            else:
+                root.insert(0, actions)
 
         if root is not soup:
             return "".join(str(child) for child in root.contents)

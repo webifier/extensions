@@ -31,7 +31,6 @@
         nav=page_nav,
         config=page_config,
         baseurl=baseurl,
-        colab=data.colab | default(""),
         global_nav=builder.root_data.nav | default(none) if builder.root_data else none,
         page_url=ctx.page_url,
         page_navigation=page_nav_links
