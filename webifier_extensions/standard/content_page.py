@@ -20,9 +20,69 @@ class ContentPageRenderer(RendererModule):
             "footer",
             "config",
             "colab",
+            "page_url",
+            "source_path",
+        }
+    )
+    METADATA_KEYS: ClassVar[frozenset[str]] = frozenset(
+        {
+            "title",
+            "header",
+            "meta",
+            "nav",
+            "footer",
+            "style",
+            "config",
+            "favicon",
         }
     )
 
     def process(self, data: dict[str, Any], ctx: NodeContext, builder) -> dict[str, Any]:
-        """Content pages are pre-rendered — just pass through."""
-        return data
+        processed = dict(data)
+        before_content = []
+        after_content = []
+        metadata = processed.get("metadata", {})
+        if isinstance(metadata, dict):
+            author_items = []
+            author_section = None
+            for key in ("authors", "reviewers"):
+                value = metadata.get(key)
+                if not isinstance(value, dict):
+                    continue
+                if author_section is None:
+                    author_section = dict(value)
+                content = value.get("people", value.get("content", []))
+                if isinstance(content, list):
+                    author_items.extend(content)
+            if author_items:
+                author_section = author_section or {}
+                author_section["kind"] = "people"
+                author_section["content"] = author_items
+                author_section["label"] = {"position": "top", "text": "Authors"}
+                after_content.append(
+                    {
+                        "key": "authors",
+                        "html": builder.process_node(author_section, ctx.child("authors")),
+                        "data": author_section,
+                    }
+                )
+            for key, value in metadata.items():
+                if key in self.METADATA_KEYS or key in {"authors", "reviewers"}:
+                    continue
+                section = {
+                    "key": key,
+                    "html": builder.process_node(value, ctx.child(key)),
+                    "data": value,
+                }
+                if key == "comments":
+                    after_content.append(section)
+                else:
+                    before_content.append(section)
+        processed["_before_content_sections"] = before_content
+        processed["_after_content_sections"] = after_content
+        return processed
+
+    def render(self, data: dict[str, Any], ctx: NodeContext, builder) -> str:
+        if "_before_content_sections" not in data or "_after_content_sections" not in data:
+            data = self.process(data, ctx, builder)
+        return super().render(data, ctx, builder)

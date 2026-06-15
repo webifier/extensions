@@ -1,6 +1,6 @@
 {# Render a single link element #}
 {% macro render_link(link, class="", grouped=false) %}
-{% set link_url = link.link | default("") %}
+{% set link_url = link.href | default(link.link | default("")) %}
 {% set link_text = link.text | default("") %}
 {% set link_icon = link.icon | default("") %}
 {% set link_description = link.description | default("") %}

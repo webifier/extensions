@@ -24,7 +24,7 @@
 </head>
 
 <body class="bg-body-tertiary">
-<div class="app-content container-fluid px-0">
+<div class="app-content container-fluid">
     {% set page_title = data.metadata.header.title | default(data.title) if data.metadata.header is defined else data.title | default("Content") %}
     {{ render_header(header=data.metadata.header | default(none), title=page_title) }}
     {{ render_nav(
@@ -36,8 +36,19 @@
         page_url=ctx.page_url,
         page_navigation=page_nav_links
     ) }}
-    <div class="container-fluid bg-body shadow app-body {% if not data.colab %}px-5 p-4{% endif %}">
-        {{ data.content }}
+    <div id="app-body"
+         class="app-body container-fluid bg-body justify-content-center align-items-center d-flex shadow">
+        <div class="container-fluid p-0 m-0 no-gutters">
+            {% for section in data._before_content_sections | default([]) %}
+                {{ section.html }}
+            {% endfor %}
+            <div class="wf-content-page-body container-fluid bg-body px-4 py-4 px-md-5 py-md-5">
+                {{ data.content }}
+            </div>
+            {% for section in data._after_content_sections | default([]) %}
+                {{ section.html }}
+            {% endfor %}
+        </div>
     </div>
     {{ render_page_navigation(page_nav_links) }}
     {{ render_footer(

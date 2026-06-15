@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 
 from webifier.core.frontmatter import split_yaml_front_matter
+from webifier.core.loader import read_yaml
 
 
 def convert_notebook(builder, src: str, assets_dir: str) -> tuple[str, dict]:
@@ -49,13 +50,17 @@ def read_notebook_with_metadata(src: str) -> tuple[object, dict]:
     with open(src) as f:
         notebook = nbformat.read(f, as_version=4)
 
+    metadata_path = os.path.join(os.path.dirname(src), "metadata.yml")
+    metadata = read_yaml(metadata_path) if os.path.isfile(metadata_path) else {}
+
     cells = notebook.get("cells", [])
     if not cells or cells[0].get("cell_type") != "markdown":
-        return notebook, {}
+        return notebook, metadata
 
-    metadata, first_cell_body = split_yaml_front_matter(cells[0].get("source", ""))
-    if not metadata:
-        return notebook, {}
+    front_metadata, first_cell_body = split_yaml_front_matter(cells[0].get("source", ""))
+    if not front_metadata:
+        return notebook, metadata
+    metadata.update(front_metadata)
     if first_cell_body.strip():
         cells[0]["source"] = first_cell_body.lstrip("\n")
     else:

@@ -31,6 +31,10 @@ class PageRenderer(RendererModule):
 
         for key, value in data.items():
             if key in self.META_KEYS:
+                if key in {"header", "footer"} and isinstance(value, dict):
+                    value = builder.resolve_background(dict(value), ctx)
+                    if ctx.depth == 0 and builder.root_data is not None:
+                        builder.root_data[key] = value
                 processed[key] = value
                 continue
             # Each section is processed recursively
@@ -38,9 +42,5 @@ class PageRenderer(RendererModule):
             sections_html.append({"key": key, "html": section_html, "data": value})
 
         processed["_sections"] = sections_html
-
-        # Resolve background images in header
-        if "header" in processed and isinstance(processed["header"], dict):
-            processed["header"] = builder.resolve_background(processed["header"], ctx)
 
         return processed
