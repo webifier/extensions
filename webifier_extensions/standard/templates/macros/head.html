@@ -3,6 +3,13 @@
 <!-- viewport meta-tag for responsiveness -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{% set page_metadata = data.metadata if data and data.metadata is mapping else {} %}
+{% set favicon = page_metadata.favicon | default(data.favicon | default(config.favicon | default("")) if data else config.favicon | default("")) if config else page_metadata.favicon | default(data.favicon | default("") if data else "") %}
+{% if favicon %}
+{% set favicon_href = favicon.href | default(favicon.src | default(favicon)) if favicon is mapping else favicon %}
+{% set favicon_type = favicon.type | default("") if favicon is mapping else "" %}
+<link rel="icon" href="{% if favicon_href.startswith('/') %}{{ baseurl }}{{ favicon_href }}{% else %}{{ baseurl }}/{{ favicon_href }}{% endif %}" {% if favicon_type %}type="{{ favicon_type }}"{% endif %}>
+{% endif %}
 
 <!-- Local CSS Stylesheets -->
 <link rel="stylesheet" href="{{ baseurl }}/assets/css/jupyter.css">

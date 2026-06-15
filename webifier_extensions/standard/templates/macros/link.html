@@ -20,7 +20,8 @@
         {% set img_width = link.image.width | default(link.image.size | default(20)) if link.image is mapping else 20 %}
         {% set img_height = link.image.height | default(link.image.size | default(20)) if link.image is mapping else 20 %}
         {% set img_class = link.image.class | default("d-inline-block") if link.image is mapping else "d-inline-block" %}
-        <img src="{{ img_src }}" width="{{ img_width }}" height="{{ img_height }}" class="{{ img_class }}">
+        {% set img_alt = link.image.alt | default(link_text) if link.image is mapping else link_text %}
+        <img src="{{ img_src }}" width="{{ img_width }}" height="{{ img_height }}" class="{{ img_class }}" alt="{{ img_alt }}">
     {% endif %}
     {% if link_text %}
         {{ link_text }}
@@ -38,7 +39,8 @@
                     {% set img_width = link.image.width | default(link.image.size | default(20)) if link.image is mapping else 20 %}
                     {% set img_height = link.image.height | default(link.image.size | default(20)) if link.image is mapping else 20 %}
                     {% set img_class = link.image.class | default("d-inline-block") if link.image is mapping else "d-inline-block" %}
-                    <img src="{{ img_src }}" width="{{ img_width }}" height="{{ img_height }}" class="{{ img_class }}">
+                    {% set img_alt = link.image.alt | default(link_text) if link.image is mapping else link_text %}
+                    <img src="{{ img_src }}" width="{{ img_width }}" height="{{ img_height }}" class="{{ img_class }}" alt="{{ img_alt }}">
                 {% endif %}
                 {% if link_text %}
                     {{ link_text }}

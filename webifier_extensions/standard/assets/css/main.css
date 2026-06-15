@@ -1,10 +1,10 @@
 html {
-    font-size: 62.5%;
+    font-size: 100%;
 }
 
 body {
-    font-size: 1rem;
-    zoom: 125%;
+    font-size: 0.95rem;
+    line-height: 1.55;
 }
 
 * > p:last-child {
@@ -37,11 +37,43 @@ a {
     transition: all 0.1s ease;
 }
 
+.wf-navbar {
+    font-size: 0.92rem;
+}
+
+.navbar-brand {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.45rem;
+}
+
+.navbar-brand img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.wf-nav-back {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.25rem;
+    color: var(--wf-muted, var(--bs-secondary-color)) !important;
+}
+
+.wf-nav-back:hover,
+.wf-nav-back:focus {
+    color: var(--wf-text, var(--bs-body-color)) !important;
+}
+
 .wf-section-label {
     align-items: center;
     overflow-wrap: anywhere;
     line-height: 1.25;
     text-align: center;
+}
+
+.wf-section-label span,
+.wf-section-label {
+    font-size: 0.95rem;
 }
 
 .wf-page-chrome,
@@ -76,8 +108,44 @@ footer {
 }
 
 .app-content {
-    padding: 3vh 0;
+    padding: 2vh 0;
     max-width: 85%;
+}
+
+.app-content h1 {
+    font-size: clamp(1.65rem, 1.35rem + 1vw, 2.15rem);
+}
+
+.app-content h2 {
+    font-size: clamp(1.35rem, 1.2rem + 0.55vw, 1.7rem);
+}
+
+.app-content h3 {
+    font-size: clamp(1.18rem, 1.08rem + 0.35vw, 1.38rem);
+}
+
+.app-content h4 {
+    font-size: 1.08rem;
+}
+
+.app-content h5,
+.app-content h6 {
+    font-size: 1rem;
+}
+
+.app-content p,
+.app-content li,
+.app-content td,
+.app-content th {
+    font-size: 0.95rem;
+}
+
+.wf-page-chrome h1 {
+    margin-bottom: 0;
+}
+
+.wf-page-chrome-panel {
+    padding: 1.25rem !important;
 }
 
 .accordion-button:not(.collapsed) {

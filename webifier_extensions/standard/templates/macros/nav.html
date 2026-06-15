@@ -1,8 +1,8 @@
 {# Navigation bar #}
 {% from "macros/link.html" import render_link %}
 
-{% macro render_nav(nav=none, config=none, baseurl="", colab="", global_nav=none, page_url="") %}
-{% if nav is not none and nav != false %}
+{% macro render_nav(nav=none, config=none, baseurl="", colab="", global_nav=none, page_url="", page_navigation=none) %}
+{% if (nav is not none and nav != false) or (nav is none and global_nav is not none) %}
 {% set has_fixed = (nav is mapping and nav.fixed) or (global_nav is mapping and global_nav.fixed) %}
 {% set has_brand = (global_nav is mapping and global_nav.brand) %}
 
@@ -12,10 +12,11 @@
     {% set links = nav.content | default(global_nav.content | default(global_nav | default([]))) if nav is mapping else global_nav.content | default(global_nav | default([])) %}
 {% endif %}
 
-{% set has_search = config and config.search and (config.search.links or config.search.content) %}
+{% set search_config = config.search | default({}) if config else {} %}
+{% set has_search = search_config and search_config.ui | default(true) and (search_config.links or search_config.content) %}
 {% set has_links = links | length > 0 %}
 
-<nav class="px-2 navbar navbar-expand-lg bg-body-tertiary m-0 p-2 sticky-top shadow">
+<nav class="px-2 navbar navbar-expand-sm bg-body-tertiary m-0 p-2 sticky-top shadow wf-navbar">
     {# Brand #}
     {% if has_brand %}
     {{ render_link(global_nav.brand, class="btn navbar-brand") }}
@@ -59,6 +60,13 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        {% endif %}
+
+        {% if page_navigation and page_navigation.previous %}
+            <a href="{{ page_navigation.previous.href }}" class="btn nav-item mt-1 wf-nav-back" aria-label="Back">
+                <span aria-hidden="true">&lsaquo;</span>
+                <span>Back</span>
+            </a>
         {% endif %}
 
         {% set fixed_links = [] %}

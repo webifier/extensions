@@ -11,6 +11,7 @@
 {% set page_nav = data.metadata.nav | default(data.nav | default(none)) if data.metadata is mapping else data.nav | default(none) %}
 {% set page_footer = data.metadata.footer | default(data.footer | default(none)) if data.metadata is mapping else data.footer | default(none) %}
 {% set page_style = data.metadata.style | default(data.style | default("")) if data.metadata is mapping else data.style | default("") %}
+{% set page_nav_links = builder.page_navigation(page_config, data, ctx) %}
 <head>
     <title>{{ data.title | default(data.metadata.title | default("Content")) }}</title>
     {{ render_head(baseurl=baseurl, config=page_config, builder=builder, data=data, ctx=ctx) }}
@@ -32,12 +33,13 @@
         baseurl=baseurl,
         colab=data.colab | default(""),
         global_nav=builder.root_data.nav | default(none) if builder.root_data else none,
-        page_url=ctx.page_url
+        page_url=ctx.page_url,
+        page_navigation=page_nav_links
     ) }}
     <div class="container-fluid bg-body shadow app-body {% if not data.colab %}px-5 p-4{% endif %}">
         {{ data.content }}
     </div>
-    {{ render_page_navigation(builder.page_navigation(page_config, data, ctx)) }}
+    {{ render_page_navigation(page_nav_links) }}
     {{ render_footer(
         footer=page_footer,
         global_footer=builder.root_data.footer | default(none) if builder.root_data else none

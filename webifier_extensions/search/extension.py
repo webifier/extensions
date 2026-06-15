@@ -9,6 +9,7 @@ class SearchExtension(Extension):
     default_config = {
         "content": True,
         "links": True,
+        "ui": True,
     }
 
     def register(self, ctx: ExtensionContext) -> None:
