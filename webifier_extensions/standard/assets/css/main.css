@@ -295,6 +295,31 @@ a {
     margin-left: 2rem !important;
 }
 
+:root[data-bs-theme="dark"] .wf-content-toc {
+    background: rgb(46, 46, 51);
+    border-color: rgb(51, 51, 51);
+    color: rgb(196, 196, 197);
+}
+
+:root[data-bs-theme="dark"] .wf-content-toc-toggle {
+    color: rgb(155, 156, 157);
+}
+
+:root[data-bs-theme="dark"] .wf-content-toc-toggle:hover,
+:root[data-bs-theme="dark"] .wf-content-toc-toggle:focus-visible,
+:root[data-bs-theme="dark"] .wf-content-toc a {
+    color: rgb(218, 218, 219);
+}
+
+:root[data-bs-theme="dark"] .wf-content-toc a:hover,
+:root[data-bs-theme="dark"] .wf-content-toc a:focus {
+    color: rgb(235, 235, 236);
+}
+
+:root[data-bs-theme="dark"] .wf-content-toc-toggle-icon {
+    color: rgb(155, 156, 157);
+}
+
 footer {
     position: static;
     width: 100%;
