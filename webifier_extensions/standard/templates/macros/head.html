@@ -1,5 +1,6 @@
 {# HTML <head> contents #}
 {% macro render_head(baseurl="", config=none, builder=none, data=none, ctx=none) %}
+{% set asset_base = baseurl.rstrip("/") %}
 <!-- viewport meta-tag for responsiveness -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +9,7 @@
 {% if favicon %}
 {% set favicon_href = favicon.href | default(favicon.src | default(favicon)) if favicon is mapping else favicon %}
 {% set favicon_type = favicon.type | default("") if favicon is mapping else "" %}
-<link rel="icon" href="{% if favicon_href.startswith('/') %}{{ baseurl }}{{ favicon_href }}{% else %}{{ baseurl }}/{{ favicon_href }}{% endif %}" {% if favicon_type %}type="{{ favicon_type }}"{% endif %}>
+<link rel="icon" href="{% if favicon_href.startswith('/') %}{{ asset_base }}{{ favicon_href }}{% else %}{{ asset_base }}/{{ favicon_href }}{% endif %}" {% if favicon_type %}type="{{ favicon_type }}"{% endif %}>
 {% endif %}
 
 <!-- JQuery -->
@@ -40,17 +41,22 @@
         });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script>
-<link rel="stylesheet" href="{{ baseurl }}/assets/css/codehilite.css">
-<link rel="stylesheet" href="{{ baseurl }}/assets/css/main.css">
-<script defer src="{{ baseurl }}/assets/js/codeblocks.js"></script>
-<script defer src="{{ baseurl }}/assets/js/content-toc.js"></script>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  const webifierTheme = document.documentElement.getAttribute("data-bs-theme");
+  mermaid.initialize({ startOnLoad: true, theme: webifierTheme === "dark" ? "dark" : "default" });
+</script>
+<link rel="stylesheet" href="{{ asset_base }}/assets/css/codehilite.css">
+<link rel="stylesheet" href="{{ asset_base }}/assets/css/main.css">
+<script defer src="{{ asset_base }}/assets/js/codeblocks.js"></script>
+<script defer src="{{ asset_base }}/assets/js/content-toc.js"></script>
 {% if builder %}
 {{ builder.render_extension_area("head", baseurl=baseurl, config=config, page=data, ctx=ctx) }}
 {% endif %}
 {% if config and config.stylesheets %}
 {% for stylesheet in config.stylesheets %}
 {% set stylesheet_href = stylesheet.href | default(stylesheet) if stylesheet is mapping else stylesheet %}
-<link rel="stylesheet" href="{{ baseurl }}/{{ stylesheet_href }}">
+<link rel="stylesheet" href="{% if stylesheet_href.startswith('/') %}{{ asset_base }}{{ stylesheet_href }}{% else %}{{ asset_base }}/{{ stylesheet_href }}{% endif %}">
 {% endfor %}
 {% endif %}
 {% endmacro %}

@@ -2,6 +2,7 @@
 {% from "macros/link.html" import render_link %}
 
 {% macro render_nav(nav=none, config=none, baseurl="", colab="", global_nav=none, page_url="", page_navigation=none) %}
+{% set asset_base = baseurl.rstrip("/") %}
 {% if (nav is not none and nav != false) or (nav is none and global_nav is not none) %}
 {% set has_fixed = (nav is mapping and nav.fixed) or (global_nav is mapping and global_nav.fixed) %}
 {% set has_brand = (global_nav is mapping and global_nav.brand) %}
@@ -117,7 +118,7 @@
 
         {% if colab %}
         <a class="btn nav-item mt-1 wf-colab-link" href="{{ colab }}" aria-label="Open in Colab" title="Open in Colab">
-            <img src="{{ baseurl }}/assets/images/colab-badge.svg" alt="Open in Colab">
+            <img src="{{ asset_base }}/assets/images/colab-badge.svg" alt="Open in Colab">
         </a>
         {% endif %}
     </div>
@@ -171,7 +172,7 @@ SimpleJekyllSearch({
             return "";
         }
     },
-    json: '{{ baseurl }}/search.json'
+    json: '{{ baseurl.rstrip("/") }}/search.json'
 });
 searchInput.addEventListener('input', function () {
     if( this.value ){

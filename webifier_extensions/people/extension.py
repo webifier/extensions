@@ -27,7 +27,8 @@ class PeopleExtension(Extension):
     def render_head(self, builder, *, baseurl: str = "", page=None, **_kwargs) -> str:
         if not self.page_uses_people(page):
             return ""
-        return Markup(f'<link rel="stylesheet" href="{baseurl}/assets/webifier/people/css/people.css">')
+        prefix = baseurl.rstrip("/")
+        return Markup(f'<link rel="stylesheet" href="{prefix}/assets/webifier/people/css/people.css">')
 
     def page_uses_people(self, value) -> bool:
         if isinstance(value, dict):

@@ -44,11 +44,12 @@ class ResumeExtension(Extension):
     def render_head(self, builder, *, baseurl: str = "", page=None, **_kwargs) -> str:
         if not _page_uses_resume(page):
             return ""
+        prefix = baseurl.rstrip("/")
         return Markup(
             "\n".join(
                 [
-                    f'<link rel="stylesheet" href="{baseurl}/assets/webifier/resume/css/resume.css">',
-                    f'<script defer src="{baseurl}/assets/webifier/resume/js/resume.js"></script>',
+                    f'<link rel="stylesheet" href="{prefix}/assets/webifier/resume/css/resume.css">',
+                    f'<script defer src="{prefix}/assets/webifier/resume/js/resume.js"></script>',
                 ]
             )
         )

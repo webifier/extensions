@@ -25,6 +25,7 @@ class ThemeExtension(Extension):
         switcher = theme.get("switcher", True)
         custom_themes = theme.get("themes", []) or []
         switcher_js = "true" if switcher else "false"
+        prefix = baseurl.rstrip("/")
         links = [
             "<script>",
             "(function () {",
@@ -38,15 +39,15 @@ class ThemeExtension(Extension):
             '  document.documentElement.dataset.bsTheme = resolved === "dark" ? "dark" : "light";',
             "})();",
             "</script>",
-            f'<link rel="stylesheet" href="{baseurl}/assets/css/theme.css">',
+            f'<link rel="stylesheet" href="{prefix}/assets/css/theme.css">',
         ]
         for item in custom_themes:
             href = item.get("css") if isinstance(item, dict) else None
             if not href:
                 continue
             if "://" not in href and not href.startswith("/"):
-                href = f"{baseurl}/{href}"
+                href = f"{prefix}/{href}"
             links.append(f'<link rel="stylesheet" href="{href}">')
         if switcher:
-            links.append(f'<script defer src="{baseurl}/assets/js/theme.js"></script>')
+            links.append(f'<script defer src="{prefix}/assets/js/theme.js"></script>')
         return Markup("\n".join(links))
