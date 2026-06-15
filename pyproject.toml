@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "webifier-extensions"
-version = "1.0.10"
+version = "1.0.11"
 description = "First-party extensions for Webifier static sites."
 readme = "README.md"
 license = "MIT"
@@ -14,6 +14,7 @@ authors = [
 ]
 dependencies = [
     "beautifulsoup4",
+    "ipython",
     "markupsafe",
     "nbconvert>=7,<8",
     "nbformat",
