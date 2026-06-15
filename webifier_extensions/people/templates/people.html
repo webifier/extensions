@@ -1,0 +1,78 @@
+{% set people = data.people | default(data.content | default([])) %}
+{% set layout = data.layout | default({}) %}
+{% set card = data.card | default({}) %}
+{% set avatar = data.avatar | default({}) %}
+{% set min_width = layout.min_width | default("14rem") %}
+{% set max_width = layout.max_width | default("18rem") %}
+{% set gap = layout.gap | default("1rem") %}
+{% set align = layout.align | default("center") %}
+{% set density = layout.density | default("comfortable") %}
+{% set avatar_size = avatar.size | default(card.avatar_size | default("4.25rem")) %}
+{% set card_align = card.align | default("center") %}
+
+{% if people %}
+<div class="wf-people"
+     style="--wf-people-card-min: {{ min_width }};
+            --wf-people-card-max: {{ max_width }};
+            --wf-people-gap: {{ gap }};
+            --wf-people-avatar-size: {{ avatar_size }};">
+    {% if data.preface %}
+    <div class="wf-people-preface">
+        {{ markdown(data.preface) }}
+    </div>
+    {% endif %}
+    <div class="wf-people-grid wf-people-grid-{{ align }} wf-people-density-{{ density }}">
+        {% for person in people %}
+        {% set links = person.links | default([]) %}
+        {% set tags = person.tags | default([]) %}
+        <article class="wf-person-card wf-person-card-{{ card_align }}">
+            {% if person.image %}
+            <div class="wf-person-avatar-wrap">
+                <img class="wf-person-avatar" src="{{ person.image }}" alt="{{ person.name | default('Person') }}">
+            </div>
+            {% elif person.initials %}
+            <div class="wf-person-avatar-wrap wf-person-avatar-initials" aria-hidden="true">
+                {{ person.initials }}
+            </div>
+            {% endif %}
+            <div class="wf-person-main">
+                {% if person.name %}
+                <h3 class="wf-person-name">{{ person.name }}</h3>
+                {% endif %}
+                {% if person.title %}
+                <p class="wf-person-title">{{ person.title }}</p>
+                {% endif %}
+                {% if person.affiliation %}
+                <p class="wf-person-affiliation">{{ person.affiliation }}</p>
+                {% endif %}
+                {% if tags %}
+                <div class="wf-person-tags" aria-label="Person tags">
+                    {% for tag in tags %}
+                    <span>{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if person.bio %}
+                <div class="wf-person-bio">
+                    {{ person.bio }}
+                </div>
+                {% endif %}
+            </div>
+            {% if links %}
+            <div class="wf-person-links">
+                {% for link in links %}
+                {% set href = link.href | default(link.link | default("")) if link is mapping else "" %}
+                {% set text = link.text | default(link.label | default(href)) if link is mapping else link %}
+                {% if href %}
+                <a href="{{ href }}">{{ text }}</a>
+                {% else %}
+                <span>{{ text }}</span>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

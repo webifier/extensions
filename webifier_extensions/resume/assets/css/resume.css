@@ -331,6 +331,23 @@
     text-align: left;
 }
 
+.resume-publications .col-md-3 {
+    font-size: 0.78rem;
+    line-height: 1.35;
+}
+
+.resume-publications .col-md-3 p {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.18rem 0.45rem;
+    justify-content: center;
+    margin-bottom: 0;
+}
+
+.resume-publications .col-md-3 a {
+    font-size: 0.78rem;
+}
+
 @keyframes experience-enter-from-right {
     from {
         opacity: 0;
