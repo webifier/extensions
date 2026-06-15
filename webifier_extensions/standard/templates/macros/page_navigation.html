@@ -6,6 +6,7 @@
             {% if page_nav.previous %}
             <a class="btn btn-link p-0 wf-page-navigation-back-icon" href="{{ page_nav.previous.href }}" aria-label="Back to {{ page_nav.previous.title }}" title="Back to {{ page_nav.previous.title }}">
                 <span aria-hidden="true">&lsaquo;</span>
+                <span>{{ page_nav.previous.title }}</span>
             </a>
             {% endif %}
         </div>
@@ -17,8 +18,8 @@
         <div class="wf-page-navigation-slot wf-page-navigation-next">
             {% if page_nav.next %}
             <a class="btn btn-link p-0" href="{{ page_nav.next.href }}">
-                <span class="d-block small text-muted">Next</span>
                 <span>{{ page_nav.next.title }}</span>
+                <span aria-hidden="true">&rsaquo;</span>
             </a>
             {% endif %}
         </div>
