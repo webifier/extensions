@@ -64,9 +64,14 @@
                 {% set href = link.href | default(link.link | default("")) if link is mapping else "" %}
                 {% set text = link.text | default(link.label | default(href)) if link is mapping else link %}
                 {% if href %}
-                <a href="{{ href }}">{{ text }}</a>
+                <a class="wf-person-link" href="{{ href }}">
+                    {% if link is mapping and link.icon %}
+                    <i class="{{ link.icon }}" aria-hidden="true"></i>
+                    {% endif %}
+                    <span>{{ text }}</span>
+                </a>
                 {% else %}
-                <span>{{ text }}</span>
+                <span class="wf-person-link">{{ text }}</span>
                 {% endif %}
                 {% endfor %}
             </div>

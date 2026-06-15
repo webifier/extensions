@@ -58,7 +58,58 @@ class PeopleRenderer(SectionRenderer):
                 person["image"] = image
         elif "github" in person:
             person["image"] = f"https://github.com/{person['github']}.png"
-        elif "initials" not in person and isinstance(person.get("name"), str):
+
+        if "github" in person and "links" not in person:
+            person["links"] = [
+                {
+                    "text": "GitHub",
+                    "link": f"https://github.com/{person['github']}",
+                    "icon": "fab fa-github",
+                }
+            ]
+
+        if "links" in person and isinstance(person["links"], list):
+            processed_links = []
+            for link in person["links"]:
+                if isinstance(link, dict):
+                    href = link.get("href", link.get("link", ""))
+                    if isinstance(href, str) and href.startswith("mailto://"):
+                        href = f"mailto:{href.removeprefix('mailto://')}"
+                        if "href" in link:
+                            link["href"] = href
+                        else:
+                            link["link"] = href
+                    if "icon" not in link and isinstance(href, str):
+                        if "github.com" in href:
+                            link["icon"] = "fab fa-github"
+                        elif href.startswith("mailto"):
+                            link["icon"] = "fas fa-envelope"
+                        elif "linkedin.com" in href:
+                            link["icon"] = "fab fa-linkedin"
+                        elif href.startswith(("http://", "https://")):
+                            link["icon"] = "fas fa-globe"
+                    if isinstance(href, str):
+                        icon = link.get("icon", "")
+                        if "github.com" in href:
+                            link["icon"] = "fab fa-github"
+                            link.setdefault("text", "GitHub")
+                            if "image" not in person:
+                                username = href.rstrip("/").split("/")[-1]
+                                if username:
+                                    person["image"] = f"https://github.com/{username}.png"
+                        elif href.startswith("mailto"):
+                            link.setdefault("text", "Email")
+                        elif "linkedin.com" in href:
+                            link.setdefault("text", "LinkedIn")
+                        elif href.startswith(("http://", "https://")):
+                            link.setdefault("text", "Website")
+                        if icon == "fas fa-github":
+                            link["icon"] = "fab fa-github"
+                    link = builder._process_link(link, ctx)
+                processed_links.append(link)
+            person["links"] = processed_links
+
+        if "image" not in person and "initials" not in person and isinstance(person.get("name"), str):
             initials = "".join(word[0] for word in person["name"].split()[:2] if word)
             if initials:
                 person["initials"] = initials.upper()
@@ -69,13 +120,5 @@ class PeopleRenderer(SectionRenderer):
                 assets_src_dir=ctx.assets_src_dir,
                 assets_target_dir=ctx.assets_target_dir,
             )
-
-        if "links" in person and isinstance(person["links"], list):
-            processed_links = []
-            for link in person["links"]:
-                if isinstance(link, dict):
-                    link = builder._process_link(link, ctx)
-                processed_links.append(link)
-            person["links"] = processed_links
 
         return person
