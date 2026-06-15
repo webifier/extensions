@@ -62,8 +62,9 @@
         </button>
         {% endif %}
 
-        {% if page_navigation and page_navigation.previous %}
-            <a href="{{ page_navigation.previous.href }}" class="btn nav-item mt-1 wf-nav-back" aria-label="Back">
+        {% set back_link = page_navigation.home | default(page_navigation.previous | default(none)) if page_navigation else none %}
+        {% if back_link %}
+            <a href="{{ back_link.href }}" class="btn nav-item mt-1 wf-nav-back" aria-label="Back">
                 <span aria-hidden="true">&lsaquo;</span>
                 <span>Back</span>
             </a>
