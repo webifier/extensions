@@ -98,7 +98,7 @@
 .experience-description {
     display: block;
     margin-top: 0.1rem;
-    font-size: 1.05rem;
+    font-size: 0.84rem;
     line-height: 1.25;
 }
 
@@ -130,7 +130,7 @@
 .experience-mobile-institution {
     margin: 0;
     padding: 0;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 600;
     line-height: 1.22;
 }
@@ -140,7 +140,7 @@
 .experience-mobile-role {
     margin: 0;
     padding: 0;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-weight: 300;
     line-height: 1.25;
 }
@@ -150,7 +150,7 @@
 .experience-mobile-extra {
     margin: 0;
     padding: 0;
-    font-size: 1.05rem;
+    font-size: 0.84rem;
     line-height: 1.25;
 }
 
@@ -179,7 +179,7 @@
     min-width: 0;
     color: var(--wf-experience-meta-color, var(--wf-muted, var(--bs-secondary-color)));
     font-family: var(--bs-font-monospace);
-    font-size: 1.05rem;
+    font-size: 0.84rem;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.01em;
 }
@@ -325,7 +325,7 @@
 .resume-publication-title {
     margin: 0;
     padding: 0;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 600;
     line-height: 1.25;
     text-align: left;
