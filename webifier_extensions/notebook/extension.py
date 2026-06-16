@@ -12,6 +12,10 @@ from .converter import convert_notebook
 class NotebookExtension(Extension):
     id = "webifier.notebook"
     dependencies = ("webifier.standard",)
+    config_key = "notebook"
+    default_config = {
+        "colab": True,
+    }
 
     def register(self, ctx: ExtensionContext) -> None:
         super().register(ctx)
@@ -44,7 +48,14 @@ class NotebookExtension(Extension):
             page_data["nav"] = builder.root_data.get("nav")
             page_data["footer"] = builder.root_data.get("footer")
             page_data["config"] = builder.config
-        if builder.repo_full_name:
+        colab_config = builder.config.get("notebook", {})
+        colab_enabled = colab_config.get("colab", True) if isinstance(colab_config, dict) else True
+        metadata_colab = metadata.get("colab")
+        if isinstance(metadata_colab, dict):
+            colab_enabled = metadata_colab.get("enabled", colab_enabled)
+        elif metadata_colab is not None:
+            colab_enabled = bool(metadata_colab)
+        if builder.repo_full_name and colab_enabled:
             nb_dir = os.path.dirname(src)
             nb_name = strip_suffixes(os.path.basename(src), [".ipynb"])
             page_data["colab"] = (

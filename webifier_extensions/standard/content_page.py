@@ -43,18 +43,29 @@ class ContentPageRenderer(RendererModule):
 
     def process(self, data: dict[str, Any], ctx: NodeContext, builder) -> dict[str, Any]:
         processed = dict(data)
+        metadata = processed.get("metadata", {})
         content_config = builder.page_config(processed).get("content_pages", {})
-        if isinstance(content_config, dict) and (content_config.get("cleanup") or content_config.get("toc")):
+        if not isinstance(content_config, dict):
+            content_config = {}
+        content_config = dict(content_config)
+        if isinstance(metadata, dict):
+            page_content_config = metadata.get("content_pages")
+            if isinstance(page_content_config, dict):
+                content_config.update(page_content_config)
+            if "toc" in metadata:
+                content_config["toc"] = metadata["toc"]
+            if "cleanup" in metadata:
+                content_config["cleanup"] = metadata["cleanup"]
+        if content_config.get("cleanup") or content_config.get("toc", True):
             processed["content"] = self.normalize_content(
                 processed.get("content", ""),
                 processed,
                 cleanup=bool(content_config.get("cleanup")),
-                toc=bool(content_config.get("toc")),
+                toc=bool(content_config.get("toc", True)),
                 asset_base=builder.base_url.rstrip("/"),
             )
         before_content = []
         after_content = []
-        metadata = processed.get("metadata", {})
         comments_section = None
         if isinstance(metadata, dict):
             metadata_ctx = ctx
