@@ -6,16 +6,15 @@ from webifier.core.extensions import Extension, ExtensionContext
 
 class GoogleAnalyticsExtension(Extension):
     id = "webifier.analytics.google"
-    config_key = "google_analytics"
 
     def register(self, ctx: ExtensionContext) -> None:
         super().register(ctx)
         ctx.add_hook("head", self.render_head)
 
-    def render_head(self, builder, *, config=None, **_kwargs) -> str:
+    def render_head(self, builder, *, config=None, instance_name: str = "analytics", **_kwargs) -> str:
         analytics = {}
         if isinstance(config, dict):
-            analytics = config.get("google_analytics", {})
+            analytics = config.get(instance_name, {})
         if analytics is False or (
             isinstance(analytics, dict) and analytics.get("enabled") is False
         ):

@@ -26,6 +26,8 @@ class ContentPageRenderer(RendererModule):
             "colab",
             "page_url",
             "source_path",
+            "_content_config_namespace",
+            "_extension_data",
         }
     )
     METADATA_KEYS: ClassVar[frozenset[str]] = frozenset(
@@ -33,11 +35,19 @@ class ContentPageRenderer(RendererModule):
             "title",
             "header",
             "meta",
+            "metadata",
             "nav",
             "footer",
             "style",
             "config",
             "favicon",
+            "content_pages",
+            "toc",
+            "cleanup",
+            "colab",
+            "notebook",
+            "pdf",
+            "page_navigation",
         }
     )
 
@@ -48,14 +58,13 @@ class ContentPageRenderer(RendererModule):
         if not isinstance(content_config, dict):
             content_config = {}
         content_config = dict(content_config)
-        if isinstance(metadata, dict):
-            page_content_config = metadata.get("content_pages")
-            if isinstance(page_content_config, dict):
-                content_config.update(page_content_config)
-            if "toc" in metadata:
-                content_config["toc"] = metadata["toc"]
-            if "cleanup" in metadata:
-                content_config["cleanup"] = metadata["cleanup"]
+        namespace = processed.get("_content_config_namespace")
+        if isinstance(namespace, str) and namespace:
+            extension_config = builder.page_config(processed).get(namespace, {})
+            if isinstance(extension_config, dict):
+                for key in ("cleanup", "toc"):
+                    if key in extension_config:
+                        content_config[key] = extension_config[key]
         if content_config.get("cleanup") or content_config.get("toc", True):
             processed["content"] = self.normalize_content(
                 processed.get("content", ""),
@@ -66,12 +75,16 @@ class ContentPageRenderer(RendererModule):
             )
         before_content = []
         after_content = []
-        comments_section = None
         if isinstance(metadata, dict):
             metadata_ctx = ctx
             source_path = processed.get("source_path")
             if isinstance(source_path, str) and source_path:
                 metadata_ctx = ctx.child("metadata", assets_src_dir=os.path.dirname(source_path))
+            metadata = builder.extensions.consume_page_keys(
+                metadata,
+                ctx=metadata_ctx,
+                config=builder.page_config(processed),
+            )
             author_items = []
             author_section = None
             for key in ("authors", "reviewers"):
@@ -103,24 +116,7 @@ class ContentPageRenderer(RendererModule):
                     "html": builder.process_node(value, metadata_ctx.child(key)),
                     "data": value,
                 }
-                if key == "comments":
-                    comments_section = section
-                    after_content.append(section)
-                else:
-                    before_content.append(section)
-        if isinstance(content_config, dict) and comments_section is None:
-            comments_config = content_config.get("comments")
-            if comments_config:
-                comments_data = dict(comments_config) if isinstance(comments_config, dict) else {}
-                comments_data.setdefault("kind", "comments")
-                comments_data.setdefault("label", False)
-                after_content.append(
-                    {
-                        "key": "comments",
-                        "html": builder.process_node(comments_data, ctx.child("comments")),
-                        "data": comments_data,
-                    }
-                )
+                after_content.append(section)
         processed["_before_content_sections"] = before_content
         processed["_after_content_sections"] = after_content
         return processed

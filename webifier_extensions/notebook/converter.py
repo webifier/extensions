@@ -50,7 +50,9 @@ def read_notebook_with_metadata(src: str) -> tuple[object, dict]:
     with open(src) as f:
         notebook = nbformat.read(f, as_version=4)
 
-    metadata_path = os.path.join(os.path.dirname(src), "metadata.yml")
+    metadata_path = os.path.join(os.path.dirname(src), "page.yml")
+    if not os.path.isfile(metadata_path):
+        metadata_path = os.path.join(os.path.dirname(src), "metadata.yml")
     metadata = read_yaml(metadata_path) if os.path.isfile(metadata_path) else {}
 
     cells = notebook.get("cells", [])

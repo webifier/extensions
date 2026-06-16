@@ -12,12 +12,12 @@ from .converter import convert_notebook
 class NotebookExtension(Extension):
     id = "webifier.notebook"
     dependencies = ("webifier.standard",)
-    config_key = "notebook"
     default_config = {
         "colab": True,
     }
 
     def register(self, ctx: ExtensionContext) -> None:
+        self.config_namespace = ctx.instance_name
         super().register(ctx)
         for key in (".ipynb", "notebook"):
             ctx.register_content_renderer(key, self.build_notebook_page)
@@ -43,18 +43,22 @@ class NotebookExtension(Extension):
                 builder.base_url,
             ),
             "source_path": src,
+            "_content_config_namespace": self.config_namespace,
         }
         if builder.root_data:
             page_data["nav"] = builder.root_data.get("nav")
             page_data["footer"] = builder.root_data.get("footer")
-            page_data["config"] = builder.config
-        colab_config = builder.config.get("notebook", {})
-        colab_enabled = colab_config.get("colab", True) if isinstance(colab_config, dict) else True
-        metadata_colab = metadata.get("colab")
-        if isinstance(metadata_colab, dict):
-            colab_enabled = metadata_colab.get("enabled", colab_enabled)
-        elif metadata_colab is not None:
-            colab_enabled = bool(metadata_colab)
+        page_config = builder.page_config(page_data)
+        colab_config = page_config.get(self.config_namespace, {})
+        if not isinstance(colab_config, dict):
+            colab_config = {}
+        content_pages = dict(page_config.get("content_pages", {}))
+        for key in ("cleanup", "toc"):
+            if key in colab_config:
+                content_pages[key] = colab_config[key]
+        page_config["content_pages"] = content_pages
+        page_data["config"] = page_config
+        colab_enabled = colab_config.get("colab", True)
         if builder.repo_full_name and colab_enabled:
             nb_dir = os.path.dirname(src)
             nb_name = strip_suffixes(os.path.basename(src), [".ipynb"])

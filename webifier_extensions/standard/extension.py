@@ -22,5 +22,9 @@ class StandardExtension(Extension):
             "section": "section",
             "links": "links",
             "markdown": "markdown",
-        }
+        },
+        "content_pages": {
+            "cleanup": False,
+            "toc": True,
+        },
     }

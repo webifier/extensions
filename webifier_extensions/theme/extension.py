@@ -8,7 +8,6 @@ from webifier_extensions._resources import package_path
 
 class ThemeExtension(Extension):
     id = "webifier.theme"
-    config_key = "theme"
     default_config = {
         "switcher": True,
         "default": "system",

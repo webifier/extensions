@@ -5,14 +5,19 @@ from webifier.core.extensions import Extension, ExtensionContext
 
 class MarkdownExtension(Extension):
     id = "webifier.markdown"
+    default_config = {
+        "cleanup": False,
+        "toc": True,
+    }
     renderers = {
         "markdown": "webifier_extensions.markdown.renderer.MarkdownRenderer",
     }
 
     def register(self, ctx: ExtensionContext) -> None:
+        self.config_namespace = ctx.instance_name
         super().register(ctx)
         for key in (".md", ".markdown", "md", "markdown"):
             ctx.register_content_renderer(key, self.build_markdown_page)
 
     def build_markdown_page(self, builder, src: str, ctx):
-        return builder._build_markdown_page(src, ctx)
+        return builder._build_markdown_page(src, ctx, config_namespace=self.config_namespace)

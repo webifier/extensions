@@ -15,7 +15,6 @@ from webifier_extensions._resources import package_path
 class PdfExtension(Extension):
     id = "webifier.pdf"
     dependencies = ("webifier.standard",)
-    config_key = "pdf"
     default_config = {
         "height": "min(82vh, 1100px)",
         "toolbar": True,
@@ -29,6 +28,7 @@ class PdfExtension(Extension):
     ]
 
     def register(self, ctx: ExtensionContext) -> None:
+        self.config_namespace = ctx.instance_name
         super().register(ctx)
         for key in (".pdf", "pdf"):
             ctx.register_content_renderer(key, self.build_pdf_page)
@@ -39,14 +39,37 @@ class PdfExtension(Extension):
             print(f"  Warning: PDF file not found: {src}")
             return None
 
-        metadata_path = os.path.join(os.path.dirname(src), "metadata.yml")
+        metadata_path = os.path.join(os.path.dirname(src), "page.yml")
+        if not os.path.isfile(metadata_path):
+            metadata_path = os.path.join(os.path.dirname(src), "metadata.yml")
         metadata = read_yaml(metadata_path) if os.path.isfile(metadata_path) else {}
         title = metadata.get("title") or os.path.splitext(os.path.basename(src))[0].replace("-", " ").title()
         pdf_url = builder.files.copy_file(src, src)
-        pdf_config = builder.config.get("pdf", {}) if isinstance(builder.config.get("pdf"), dict) else {}
+        page_data = {
+            "metadata": metadata,
+            "title": title,
+            "page_url": prepend_baseurl(
+                strip_suffixes(src, builder._content_suffixes()),
+                builder.base_url,
+            ),
+            "source_path": src,
+            "_content_config_namespace": self.config_namespace,
+            "pdf": {
+                "src": pdf_url,
+                "source_path": src,
+            },
+        }
+        if builder.root_data:
+            page_data["nav"] = builder.root_data.get("nav")
+            page_data["footer"] = builder.root_data.get("footer")
+
+        page_config = builder.page_config(page_data)
+        pdf_config = page_config.get(self.config_namespace, {})
+        if not isinstance(pdf_config, dict):
+            pdf_config = {}
         height = pdf_config.get("height", self.default_config["height"])
         view = pdf_config.get("view", "FitH")
-        pdf_src = f"{pdf_url}#view={view}" if view else pdf_url
+        pdf_src = f"{pdf_url}#view={escape(str(view), quote=True)}" if view else pdf_url
 
         actions = []
         if pdf_config.get("toolbar", True):
@@ -68,28 +91,16 @@ class PdfExtension(Extension):
             )
         )
 
-        page_config = dict(builder.config)
         content_pages = dict(page_config.get("content_pages", {}))
-        content_pages["toc"] = False
+        if "toc" in pdf_config:
+            content_pages["toc"] = pdf_config["toc"]
+        if "cleanup" in pdf_config:
+            content_pages["cleanup"] = pdf_config["cleanup"]
+        if "toc" not in content_pages:
+            content_pages["toc"] = False
         page_config["content_pages"] = content_pages
-        page_data = {
-            "content": body_html,
-            "metadata": metadata,
-            "title": title,
-            "page_url": prepend_baseurl(
-                strip_suffixes(src, builder._content_suffixes()),
-                builder.base_url,
-            ),
-            "source_path": src,
-            "config": page_config,
-            "pdf": {
-                "src": pdf_url,
-                "source_path": src,
-            },
-        }
-        if builder.root_data:
-            page_data["nav"] = builder.root_data.get("nav")
-            page_data["footer"] = builder.root_data.get("footer")
+        page_data["content"] = body_html
+        page_data["config"] = page_config
         renderer = resolve_renderer("content-page", jinja_env=builder.jinja_env)
         return renderer.render(page_data, ctx, builder)
 

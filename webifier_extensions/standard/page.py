@@ -21,6 +21,7 @@ class PageRenderer(RendererModule):
             "config",
             "search",
             "style",
+            "_extension_data",
         }
     )
 

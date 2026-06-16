@@ -5,7 +5,6 @@ from webifier.core.extensions import Extension, ExtensionContext
 
 class SearchExtension(Extension):
     id = "webifier.search"
-    config_key = "search"
     default_config = {
         "content": True,
         "links": True,
